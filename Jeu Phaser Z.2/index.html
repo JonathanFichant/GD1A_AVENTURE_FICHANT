@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Proto Zelda Like</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <script type="text/javascript">
+
+    var player; // variable globale à toutes les scènes ?
+    var score = 0;
+    var scoreText;
+
+    class niveau0 extends Phaser.Scene {
+        constructor() {
+            super({key : "niveau0" });
+            this.platforms; // déclaration de toutes les variables utiles
+            //this.player;
+            this.cursors;
+            this.stars;
+            this.porte;
+            this.bombs;
+            this.gameOver = false;
+            this.speed = 150;
+
+            // Variable du mob
+            this.mob;
+            this.mobX = true;
+            this.temp = false;
+            this.speedMob = 50;
+            this.directionMob = 'right';
+            this.modeAggro = false;
+            this.diagoX = 0; // pour éviter déplacement diagonale rapide
+            this.diagoY = 0;
+            this.visionRange = 100;
+            this.angleMob = 0; // sa direction, pas défaut à droite, (gauche : Math.PI, haut : Math.PI/2, bas : -Math.PI/2)
+            this.fovMob = Math.PI / 4 // son champ de vision, 45 degrés ici
+            
+        }
+
+        preload() { // préchargement des assets
+            this.load.image('sky', 'assets/sky.png');
+            this.load.image('ground', 'assets/platform.png');
+            this.load.image('star', 'assets/star.png');
+            this.load.image('mob', 'assets/bomb.png')
+            //this.load.image('bomb', 'assets/bomb.png');
+            this.load.image('porte','assets/porte.png');
+            this.load.spritesheet('perso', 'assets/perso.png',
+                { frameWidth: 32, frameHeight: 48 }); // largeur et hauteur du sprite
+            this.load.spritesheet('link', 'assets/spritesheet_Link.png',
+                { frameWidth:24, frameHeight: 32});
+            
+        };
+
+        create() { // Création des éléments dès l'initialisation du jeu
+
+            this.cursors = this.input.keyboard.createCursorKeys(); // variable pour input
+
+            this.add.image(500, 400, 'sky').setScale(2, 2); // Position de l'image, origine au centre, l'image n'est pas affichée en entier ?
+            this.porte = this.physics.add.sprite(300,400,'porte').setScale(0.1);//.refreshBody;
+            this.platforms = this.physics.add.staticGroup();
+            this.platforms.create(300, 750, 'ground').setScale(20, 1).refreshBody(); //setScale permet de changer la taille en x et y, si un seul chiffre c'est les deux
+            // refreshBody() permet d'adapter ensuite le sprite à la nouvelle forme, si on ne le met pas, bug ?
+            this.platforms.create(500, 400, 'ground').setScale(0.01, 12).refreshBody();
+            this.platforms.create(150, 350, 'ground').setScale(0.1, 12).refreshBody(); //position x et y, puis le sprite utilisé
+            this.platforms.create(800, 250, 'ground').setScale(1, 6).refreshBody();
+
+
+            this.player = this.physics.add.sprite(300, 250, 'link');
+            this.player.setBounce(0.1);
+            this.player.setOrigin(0.5,0.5);
+            this.player.setCollideWorldBounds(true);
+            this.physics.add.collider(this.player, this.platforms);
+
+            this.mob = this.physics.add.sprite(400,300,'mob');
+            this.mob.setCollideWorldBounds(true);
+            this.mob.setOrigin(0.5,0.5);
+            this.physics.add.collider(this.mob,this.plateforms);
+            this.physics.add.collider(this.mob,this.player);
+            
+            //this.link.setScale(2).refreshBody();
+
+            this.physics.world.setBounds(0,0,1000,800); // Défini les limites où le joueur peut aller
+            this.cameras.main.setBounds(0,0,1000,800); // Défini les limites de la caméra (début x, début y, fin x, fin y)
+            this.cameras.main.startFollow(this.player,false,0.1,0.1); //ancrage de la caméra sur l'objet player
+            this.cameras.main.setZoom(2.5);
+
+
+            this.anims.create({
+                key: 'idle',
+                frames: this.anims.generateFrameNumbers('link', {start : 44, end : 44}),
+                frameRate: 20,
+                repeat:-1
+            });
+
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('link', { start: 33, end: 40 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('link', { start: 0, end: 7 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            
+            this.anims.create({
+                key: 'down',
+                frames: this.anims.generateFrameNumbers('link', { start: 44, end: 51 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'up',
+                frames: this.anims.generateFrameNumbers('link', { start: 11, end: 18 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+
+
+
+            scoreText = this.add.text(16, 16, 'Score : 0', { fontSize: '32px', fill: '#000' }).setOrigin(0,0).setScrollFactor(0);
+
+            //affiche un texte à l’écran, pour le score
+            this.stars = this.physics.add.group({
+                key: 'star', repeat: 13,
+                setXY: { x: 13, y: 0, stepX: 74 }
+            });
+            this.stars.children.iterate(function (child) {
+
+                child.setBounceY(Phaser.Math.FloatBetween(0.3, 0.6));
+            }); //chaque étoile va rebondir un peu différemment
+            this.physics.add.collider(this.stars, this.platforms);
+            //et collisionne avec les plateformes
+            this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+            //le contact perso/étoile ne génère pas de collision (overlap)
+            //mais en revanche cela déclenche une fonction collectStar
+            this.bombs = this.physics.add.group();
+            this.physics.add.collider(this.bombs, this.platforms);
+            this.physics.add.collider(this.bombs, this.bombs);
+            this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+            this.physics.add.collider(this.player, this.stars); // permet d'être pris en compte dans le player.body.touching.right/left
+        
+            this.physics.add.overlap(this.player,this.porte,this.hitPorte,null,this);
+            //this.physics.add.collider(this.player,this.porte);
+        }
+
+        update() {
+            if (this.gameOver) { return; }
+
+            if (this.cursors.left.isDown && this.cursors.up.isUp && this.cursors.down.isUp) { // GAUCHE
+                this.player.setVelocityX(-this.speed); //
+                this.player.setVelocityY(0)
+                this.player.anims.play('left', true); //
+            }
+            else if (this.cursors.right.isDown && this.cursors.up.isUp && this.cursors.down.isUp) { // DROITE
+                this.player.setVelocityX(this.speed); //
+                this.player.setVelocityY(0)
+                this.player.anims.play('right', true); //
+            }
+            else if (this.cursors.down.isDown && this.cursors.right.isUp && this.cursors.left.isUp) { // BAS
+                this.player.setVelocityX(0)
+                this.player.setVelocityY(this.speed); //
+                this.player.anims.play('down', true); //
+            }
+            else if (this.cursors.up.isDown && this.cursors.right.isUp && this.cursors.left.isUp) { // HAUT
+                this.player.setVelocityX(0)
+                this.player.setVelocityY(-this.speed); //
+                this.player.anims.play('up', true); //
+            }
+            else if (this.cursors.up.isDown && this.cursors.right.isDown) { // HAUT DROITE
+                this.player.setVelocityX(this.speed*0.7071); //alors vitesse positive en X
+                this.player.setVelocityY(-this.speed*0.7071);
+                this.player.anims.play('up', true); //
+            }
+            else if (this.cursors.up.isDown && this.cursors.left.isDown) { // HAUT GAUCHE
+                this.player.setVelocityX(-this.speed*0.7071); //alors vitesse positive en X
+                this.player.setVelocityY(-this.speed*0.7071)
+                this.player.anims.play('up', true); //
+            }
+            else if (this.cursors.down.isDown && this.cursors.right.isDown) { // BAS DROITE
+            this.player.setVelocityX(this.speed*0.7071); //alors vitesse positive en X
+            this.player.setVelocityY(this.speed*0.7071)
+            this.player.anims.play('down', true); //
+            }
+            else if (this.cursors.down.isDown && this.cursors.left.isDown) { // BAS GAUCHE
+                this.player.setVelocityX(-this.speed*0.7071); //alors vitesse positive en X
+                this.player.setVelocityY(this.speed*0.7071)
+                this.player.anims.play('down', true); //
+            }
+            else { // sinon
+                this.player.setVelocity(0); //vitesse nulle
+                this.player.anims.play('idle',true); //animation fait face caméra
+            }
+            /*if ((this.cursors.up.isDown || this.cursors.space.isDown) && this.player.body.touching.down) {
+                //si touche haut appuyée ET que le perso touche le sol
+                this.player.setVelocityY(-600); //alors vitesse verticale négative
+                //(on saute)
+            }*/
+            /*if ((this.cursors.up.isDown || this.cursors.space.isDown) && (this.player.body.touching.right)) { //Wall jump
+                //si touche haut appuyée ET que le perso touche un mur
+                this.player.setVelocity(Phaser.Math.Between(-200, 0), 20);
+
+                //player.setBounce(3);
+                this.player.setVelocityY(-600); //alors vitesse verticale négative
+                //(on saute)
+            }*/
+            
+
+
+            /*if ((this.cursors.up.isDown || this.cursors.space.isDown) && (this.player.body.touching.left)) { //Wall jump
+                //si touche haut appuyée ET que le perso touche un mur
+                //player.setVelocityX(6);
+                this.player.setVelocityY(-600); //alors vitesse verticale négative
+                //(on saute)
+            }*/
+
+
+
+
+
+
+
+            // COMPORTEMENT MOB
+
+
+        
+
+           // MODE ZEN
+           if (this.mobX == true && this.modeAggro == false){ // va vers la droite
+                this.mobX = false;
+                this.mob.setVelocityX(this.speedMob);
+                this.angleMob = 0;
+                this.time.delayedCall(1500,this.mobReverse, [], this);
+            }
+
+            if (this.temp == true && this.modeAggro == false){ // va vers la gauche
+                this.temp = false;
+                this.mob.setVelocityX(-this.speedMob);
+                this.angleMob = Math.PI;
+                this.time.delayedCall(1500,this.mobReverse2, [], this);
+            }
+
+                // pause (randomiser le temps de pause)
+
+
+
+            // MODE AGGRO
+
+            //Math.PI / 4 désigne l'angle du champ de vision, 45 degrés ici
+
+            if (Math.abs(this.checkAngle(this.mob.x,this.mob.y,this.player.x,this.player.y) + this.angleMob) < (Math.PI / 4) && this.checkDistance(this.player.x,this.player.y,this.mob.x, this.mob.y) <= this.visionRange){
+                this.modeAggro = true;
+            }
+
+
+            if (this.modeAggro == true){
+                if ((Math.abs(this.player.x - this.mob.x)) < 8){ // si mob est à peu près au même niveau alors il reste sur l'axe
+                    this.diagoX = 0
+                    this.mob.setVelocityX(0)
+                }
+                else if(this.player.x < this.mob.x){ // Si joueur est à gauche du mob
+                    this.diagoX = 1;
+                    if (this.diagoX + this.diagoY == 1) {
+                    this.mob.setVelocityX(-this.speedMob)
+                    }
+                    else {
+                        this.mob.setVelocityX(-this.speedMob * 0.7071)
+                    }
+                }
+                else if (this.player.x > this.mob.x) {
+                    this.diagoX = 1;
+                    if (this.diagoX + this.diagoY == 1) {
+                    this.mob.setVelocityX(this.speedMob)
+                    }
+                    else {
+                        this.mob.setVelocityX(this.speedMob * 0.7071)
+                    }
+                }
+                
+                if (Math.abs((this.player.y - this.mob.y)) < 8) {
+                    this.diagoY = 0;
+                    this.mob.setVelocityY(0)
+                }
+                else if(this.player.y < this.mob.y){ // Si joueur est au dessus du mob
+                    this.diagoY = 1;
+                    if (this.diagoX + this.diagoY == 1) {
+                        this.mob.setVelocityY(-this.speedMob)
+                    }
+                    else {
+                        this.mob.setVelocityY(-this.speedMob * 0.7071)
+                    }
+                }
+                else if (this.player.y > this.mob.y){
+                    this.diagoY = 1;
+                    if (this.diagoX + this.diagoY == 1) {
+                        this.mob.setVelocityY(this.speedMob)
+                    }
+                    else {
+                        this.mob.setVelocityY(this.speedMob * 0.7071)
+                    }
+                }
+            }          
+        }
+
+
+        // enemy.angle : Math.PI, enemy.fov : Math.PI / 4
+
+
+
+        mobReverse(){ // Fonctions pour les allers retours et les pauses
+            this.mob.setVelocity(0);
+            this.time.delayedCall(600,this.mobPause,[],this);
+        }
+        mobReverse2(){
+            this.mob.setVelocity(0);
+            this.time.delayedCall(600,this.mobPause2,[],this);
+        }
+        mobPause(){
+            this.temp = true
+        }
+        mobPause2(){
+            this.mobX = true
+        }
+
+        checkDistance(x1,y1,x2,y2){ // mesure la distance entre deux éléments
+            return Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+        }
+
+        checkAngle(x1,y1,x2,y2){
+            return Math.atan2(y2-y1,x2-x1);
+        }
+
+
+
+
+
+        collectStar(player, star) {
+            star.disableBody(true, true); // l’étoile disparaît
+            this.score += 1; //augmente le score de 10
+            scoreText.setText('Score : ' + this.score); //met à jour l’affichage du score
+
+            if (this.stars.countActive(true) === 0) {// si toutes les étoiles sont prises
+                this.stars.children.iterate(function (child) {
+                    child.enableBody(true, child.x, 0, true, true);
+                }); // on les affiche toutes de nouveau
+                /*var x = (player.x < 400) ? Phaser.Math.Between(400, 800) :
+                                            Phaser.Math.Between(0, 400);
+                // si le perso est à gauche de l’écran, on met une bombe à droite
+                // si non, on la met à gauche de l’écran
+                var bomb = bombs.create(x, 10, 'bomb').setScale(3).refreshBody();
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true); // Rebondit contre les bords de l'écran ?
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                bomb.allowGravity = false; //elle n’est pas soumise à la gravité*/
+                this.scene.start('niveau1', { score: 15 })
+            }
+        }
+
+        /*hitBomb(player, bomb) {
+            this.physics.pause();
+            this.player.setTint(0xff0000);
+            this.player.anims.play('turn');
+            this.gameOver = true;
+        }*/
+
+        hitPorte(player,porte){
+            this.scene.start('niveau1', {score : 16})
+        }
+
+    }
+
+    class niveau1 extends Phaser.Scene {
+        constructor() {
+            super("niveau1");
+            this.platforms; // déclaration de toutes les variables utiles
+            this.player;
+            this.cursors;
+            this.stars;
+            this.porte;
+            this.bombs;
+            this.gameOver = false;
+            this.speed = 150
+        }
+
+        preload() { // préchargement des assets
+            this.load.image('sky', 'assets/sky.png');
+            this.load.image('ground', 'assets/platform.png');
+            this.load.image('star', 'assets/star.png');
+            this.load.image('bomb', 'assets/bomb.png');
+            this.load.image('porte','assets/porte.png');
+            this.load.spritesheet('perso', 'assets/perso.png',
+                { frameWidth: 32, frameHeight: 48 }); // largeur et hauteur du sprite
+            this.load.spritesheet('link', 'assets/spritesheet_Link.png',
+                { frameWidth:24, frameHeight: 32});
+            
+        };
+
+        create() { // Création des éléments dès l'initialisation du jeu
+
+            this.cursors = this.input.keyboard.createCursorKeys(); // variable pour input
+
+            this.add.image(500, 400, 'sky').setScale(2, 2); // Position de l'image, origine au centre, l'image n'est pas affichée en entier ?
+            this.porte = this.physics.add.sprite(300,400,'porte').setScale(0.1);//.refreshBody;
+            this.platforms = this.physics.add.staticGroup();
+            this.platforms.create(300, 750, 'ground').setScale(20, 1).refreshBody(); //setScale permet de changer la taille en x et y, si un seul chiffre c'est les deux
+            // refreshBody() permet d'adapter ensuite le sprite à la nouvelle forme, si on ne le met pas, bug ?
+            this.platforms.create(500, 400, 'ground').setScale(0.01, 12).refreshBody();
+            this.platforms.create(150, 350, 'ground').setScale(0.1, 12).refreshBody(); //position x et y, puis le sprite utilisé
+            this.platforms.create(800, 250, 'ground').setScale(1, 6).refreshBody();
+
+
+            this.player = this.physics.add.sprite(300, 450, 'link');
+            this.player.setBounce(0.1);
+            this.player.setCollideWorldBounds(true);
+            this.physics.add.collider(this.player, this.platforms);
+            
+            //this.link.setScale(2).refreshBody();
+
+            this.physics.world.setBounds(0,0,1000,800); // Défini les limites où le joueur peut aller
+            this.cameras.main.setBounds(0,0,1000,800); // Défini les limites de la caméra (début x, début y, fin x, fin y)
+            this.cameras.main.startFollow(this.player,false,0.1,0.1); //ancrage de la caméra sur l'objet player
+            this.cameras.main.setZoom(2.5);
+
+
+            this.anims.create({
+                key: 'idle',
+                frames: this.anims.generateFrameNumbers('link', {start : 44, end : 44}),
+                frameRate: 20,
+                repeat:-1
+            });
+
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('link', { start: 33, end: 40 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('link', { start: 0, end: 7 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            
+            this.anims.create({
+                key: 'down',
+                frames: this.anims.generateFrameNumbers('link', { start: 44, end: 51 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'up',
+                frames: this.anims.generateFrameNumbers('link', { start: 11, end: 18 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+
+
+
+            scoreText = this.add.text(16, 16, 'Score : 0', { fontSize: '32px', fill: '#000' });
+
+            //affiche un texte à l’écran, pour le score
+            this.stars = this.physics.add.group({
+                key: 'star', repeat: 13,
+                setXY: { x: 13, y: 0, stepX: 74 }
+            });
+            this.stars.children.iterate(function (child) {
+
+                child.setBounceY(Phaser.Math.FloatBetween(0.3, 0.6));
+            }); //chaque étoile va rebondir un peu différemment
+            this.physics.add.collider(this.stars, this.platforms);
+            //et collisionne avec les plateformes
+            this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+            //le contact perso/étoile ne génère pas de collision (overlap)
+            //mais en revanche cela déclenche une fonction collectStar
+            this.bombs = this.physics.add.group();
+            this.physics.add.collider(this.bombs, this.platforms);
+            this.physics.add.collider(this.bombs, this.bombs);
+            this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+            this.physics.add.collider(this.player, this.stars); // permet d'être pris en compte dans le player.body.touching.right/left
+        
+            this.physics.add.overlap(this.player,this.porte,this.hitPorte,null,this);
+            //this.physics.add.collider(this.player,this.porte);
+        }
+
+        update() {
+            if (this.gameOver) { return; }
+
+            if (this.cursors.left.isDown && this.cursors.up.isUp && this.cursors.down.isUp) { // GAUCHE
+                this.player.setVelocityX(-this.speed); //
+                this.player.setVelocityY(0)
+                this.player.anims.play('left', true); //
+            }
+            else if (this.cursors.right.isDown && this.cursors.up.isUp && this.cursors.down.isUp) { // DROITE
+                this.player.setVelocityX(this.speed); //
+                this.player.setVelocityY(0)
+                this.player.anims.play('right', true); //
+            }
+            else if (this.cursors.down.isDown && this.cursors.right.isUp && this.cursors.left.isUp) { // BAS
+                this.player.setVelocityX(0)
+                this.player.setVelocityY(this.speed); //
+                this.player.anims.play('down', true); //
+            }
+            else if (this.cursors.up.isDown && this.cursors.right.isUp && this.cursors.left.isUp) { // HAUT
+                this.player.setVelocityX(0)
+                this.player.setVelocityY(-this.speed); //
+                this.player.anims.play('up', true); //
+            }
+            else if (this.cursors.up.isDown && this.cursors.right.isDown) { // HAUT DROITE
+                this.player.setVelocityX(this.speed*0.7071); //alors vitesse positive en X
+                this.player.setVelocityY(-this.speed*0.7071);
+                this.player.anims.play('up', true); //
+            }
+            else if (this.cursors.up.isDown && this.cursors.left.isDown) { // HAUT GAUCHE
+                this.player.setVelocityX(-this.speed*0.7071); //alors vitesse positive en X
+                this.player.setVelocityY(-this.speed*0.7071)
+                this.player.anims.play('up', true); //
+            }
+            else if (this.cursors.down.isDown && this.cursors.right.isDown) { // BAS DROITE
+            this.player.setVelocityX(this.speed*0.7071); //alors vitesse positive en X
+            this.player.setVelocityY(this.speed*0.7071)
+            this.player.anims.play('down', true); //
+            }
+            else if (this.cursors.down.isDown && this.cursors.left.isDown) { // BAS GAUCHE
+                this.player.setVelocityX(-this.speed*0.7071); //alors vitesse positive en X
+                this.player.setVelocityY(this.speed*0.7071)
+                this.player.anims.play('down', true); //
+            }
+            else { // sinon
+                this.player.setVelocity(0); //vitesse nulle
+                this.player.anims.play('idle',true); //animation fait face caméra
+            }
+    
+            
+
+
+        }
+
+        collectStar(player, star) {
+            star.disableBody(true, true); // l’étoile disparaît
+            this.score += 1; //augmente le score de 10
+            scoreText.setText('Score : ' + this.score); //met à jour l’affichage du score
+
+            if (this.stars.countActive(true) === 0) {// si toutes les étoiles sont prises
+                this.stars.children.iterate(function (child) {
+                    child.enableBody(true, child.x, 0, true, true);
+                }); // on les affiche toutes de nouveau
+                /*var x = (player.x < 400) ? Phaser.Math.Between(400, 800) :
+                                            Phaser.Math.Between(0, 400);
+                // si le perso est à gauche de l’écran, on met une bombe à droite
+                // si non, on la met à gauche de l’écran
+                var bomb = bombs.create(x, 10, 'bomb').setScale(3).refreshBody();
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true); // Rebondit contre les bords de l'écran ?
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                bomb.allowGravity = false; //elle n’est pas soumise à la gravité*/
+                this.scene.start('niveau1', { score: 15 })
+            }
+        }
+
+        /*hitBomb(player, bomb) {
+            this.physics.pause();
+            this.player.setTint(0xff0000);
+            this.player.anims.play('turn');
+            this.gameOver = true;
+        }*/
+
+        hitPorte(player,porte){
+            this.scene.start('niveau0', {score : 16})
+        }
+
+    }
+
+    class niveau2 extends Phaser.Scene {
+        constructor() {
+            super("niveau2");
+            this.platforms; // déclaration de toutes les variables utiles
+            this.player;
+            this.cursors;
+            this.stars;
+            this.bombs;
+            this.gameOver = false;
+        }
+
+        preload() { // préchargement des assets
+            this.load.image('sky', 'assets/sky.png');
+            this.load.image('ground', 'assets/platform.png');
+            this.load.image('star', 'assets/star.png');
+            this.load.image('bomb', 'assets/bomb.png');
+            this.load.spritesheet('perso', 'assets/perso.png',
+                { frameWidth: 32, frameHeight: 48 }); // largeur et hauteur du sprite
+        };
+
+
+        create() { // Création des éléments dès l'initialisation du jeu
+
+            this.cursors = this.input.keyboard.createCursorKeys(); // variable pour input
+
+            this.add.image(500, 400, 'sky').setScale(2, 2); // Position de l'image, origine au centre, l'image n'est pas affichée en entier ?
+
+            this.platforms = this.physics.add.staticGroup();
+            this.platforms.create(300, 750, 'ground').setScale(20, 1).refreshBody(); //setScale permet de changer la taille en x et y, si un seul chiffre c'est les deux
+            // refreshBody() permet d'adapter ensuite le sprite à la nouvelle forme, si on ne le met pas, bug ?
+            this.platforms.create(400, 400, 'ground').setScale(0.01, 12).refreshBody();
+            this.platforms.create(250, 350, 'ground').setScale(0.1, 12).refreshBody(); //position x et y, puis le sprite utilisé
+            this.platforms.create(600, 250, 'ground').setScale(1, 6).refreshBody();
+
+
+            this.player = this.physics.add.sprite(300, 450, 'perso');
+            this.player.setBounce(0.1);
+            this.player.setCollideWorldBounds(true);
+            this.physics.add.collider(this.player, this.platforms);
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'turn',
+                frames: [{ key: 'perso', frame: 4 }],
+                frameRate: 20
+            });
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('perso', { start: 5, end: 8 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            scoreText = this.add.text(16, 16, 'Score : 0', { fontSize: '32px', fill: '#000' });
+
+            //affiche un texte à l’écran, pour le score
+            this.stars = this.physics.add.group({
+                key: 'star', repeat: 13,
+                setXY: { x: 13, y: 0, stepX: 74 }
+            });
+            this.stars.children.iterate(function (child) {
+
+                child.setBounceY(Phaser.Math.FloatBetween(0.3, 0.6));
+            }); //chaque étoile va rebondir un peu différemment
+            this.physics.add.collider(this.stars, this.platforms);
+            //et collisionne avec les plateformes
+            this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+            //le contact perso/étoile ne génère pas de collision (overlap)
+            //mais en revanche cela déclenche une fonction collectStar
+            this.bombs = this.physics.add.group();
+            this.physics.add.collider(this.bombs, this.platforms);
+            this.physics.add.collider(this.bombs, this.bombs);
+            this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+            this.physics.add.collider(this.player, this.stars); // permet d'être pris en compte dans le player.body.touching.right/left
+        }
+
+        update() {
+            if (this.gameOver) { return; }
+
+            if (this.cursors.left.isDown) { //si la touche gauche est appuyée
+                this.player.setVelocityX(-300); //alors vitesse négative en X
+                this.player.anims.play('left', true); //et animation => gauche
+            }
+            else if (this.cursors.right.isDown) { //sinon si la touche droite est appuyée
+                this.player.setVelocityX(300); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
+            }
+            else { // sinon
+                this.player.setVelocityX(0); //vitesse nulle
+                this.player.anims.play('turn'); //animation fait face caméra
+            }
+            if ((this.cursors.up.isDown || this.cursors.space.isDown) && this.player.body.touching.down) {
+                //si touche haut appuyée ET que le perso touche le sol
+                this.player.setVelocityY(-600); //alors vitesse verticale négative
+                //(on saute)
+            }
+            if ((this.cursors.up.isDown || this.cursors.space.isDown) && (this.player.body.touching.right)) { //Wall jump
+                //si touche haut appuyée ET que le perso touche un mur
+                this.player.setVelocity(Phaser.Math.Between(-200, 0), 20);
+
+                //player.setBounce(3);
+                this.player.setVelocityY(-600); //alors vitesse verticale négative
+                //(on saute)
+            }
+
+
+
+            if ((this.cursors.up.isDown || this.cursors.space.isDown) && (this.player.body.touching.left)) { //Wall jump
+                //si touche haut appuyée ET que le perso touche un mur
+                //player.setVelocityX(6);
+                this.player.setVelocityY(-600); //alors vitesse verticale négative
+                //(on saute)
+            }
+
+
+        }
+
+        collectStar(player, star) {
+            star.disableBody(true, true); // l’étoile disparaît
+            this.score += 1; //augmente le score de 10
+            scoreText.setText('Score : ' + this.score); //met à jour l’affichage du score
+
+            if (this.stars.countActive(true) === 0) {// si toutes les étoiles sont prises
+                this.stars.children.iterate(function (child) {
+                    child.enableBody(true, child.x, 0, true, true);
+                }); // on les affiche toutes de nouveau
+                /*var x = (player.x < 400) ? Phaser.Math.Between(400, 800) :
+                                            Phaser.Math.Between(0, 400);
+                // si le perso est à gauche de l’écran, on met une bombe à droite
+                // si non, on la met à gauche de l’écran
+                var bomb = bombs.create(x, 10, 'bomb').setScale(3).refreshBody();
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true); // Rebondit contre les bords de l'écran ?
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                bomb.allowGravity = false; //elle n’est pas soumise à la gravité*/
+                this.scene.start('niveau0', { score: 15 })
+            }
+        }
+
+        hitBomb(player, bomb) {
+            this.physics.pause();
+            this.player.setTint(0xff0000);
+            this.player.anims.play('turn');
+            this.gameOver = true;
+        }
+
+    }
+    
+
+    var config = { // initialisation de phaser
+        type: Phaser.AUTO,
+        width: 1000, height: 800, // taille de la fenêtre
+        physics: {
+            default: 'arcade',
+            arcade: {
+                //gravity: { y: 1000 }, // gravité
+                debug: true // en true permet de voir les hitbox et trajectoires
+            }
+        },
+        scene: [niveau0, niveau1, niveau2]
+        //scene: {preload: preload, create: create, update: update}
+    };
+
+    //new Phaser.Game(config);
+    var game = new Phaser.Game(config);
+    game.scene.start("niveau0"); // Le jeu commence à cette scène
+    </script>
+
+</body>
+
+</html>
