@@ -1,4 +1,4 @@
-# Zelda-Like
+# Kusarigama Chronicles
 
 Input : 
 - E : interaction
