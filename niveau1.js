@@ -1185,7 +1185,7 @@ export class niveau1 extends Phaser.Scene {
             this.longueurChaine = 142
         }
         else {
-            this.longueurChaine = 64
+            this.longueurChaine = 80
         }
     }
 
