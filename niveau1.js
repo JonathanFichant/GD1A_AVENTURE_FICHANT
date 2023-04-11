@@ -253,7 +253,7 @@ export class niveau1 extends Phaser.Scene {
             this.stepArme = 0;
             this.dialogueBox.visible = true;
             this.dialogueText.setText(this.dialogueA[0]);
-            this.time.delayedCall(5000, function () {
+            this.time.delayedCall(6000, function () {
                 this.dialogueBox.visible = false;
                 this.dialogueText.setText('');
             }, [], this);
