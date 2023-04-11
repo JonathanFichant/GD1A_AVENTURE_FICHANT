@@ -22,7 +22,7 @@ var config = { // initialisation de phaser
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true// en true permet de voir les hitbox et trajectoires
+            debug: false// en true permet de voir les hitbox et trajectoires
         }
     },
     pixelArt: true,

@@ -33,7 +33,7 @@ export class niveau1 extends Phaser.Scene {
         this.prevY;*/
 
         this.keyboard;
-        
+
         this.keyF;
         this.keyT;
         this.keyR;
@@ -79,7 +79,7 @@ export class niveau1 extends Phaser.Scene {
         this.load.image('caisse', 'assets/caisse.png')
         this.load.image('blocCible', 'assets/blocCible.png');
         this.load.image('poids', 'assets/poids.png');
-        this.load.image('ombreJoueur','assets/ombreJoueur.png')
+        this.load.image('ombreJoueur', 'assets/ombreJoueur.png')
         this.load.spritesheet('lifeBarre', 'assets/lifeBarre.png',
             { frameWidth: 32 * 7, frameHeight: 64 });
         this.load.image('faux', 'assets/faux.png');
@@ -239,7 +239,7 @@ export class niveau1 extends Phaser.Scene {
             this.player = this.physics.add.sprite(768, 64, 'ninja');
             this.spwan_mob = false;
         }
-        else if (this.entrance == "menuScene"){
+        else if (this.entrance == "menuScene") {
             this.player = this.physics.add.sprite(812, 1316, 'ninja');
             this.stepArme = 0;
             this.nbMaillons = 0;
@@ -253,12 +253,12 @@ export class niveau1 extends Phaser.Scene {
             this.stepArme = 0;
             this.dialogueBox.visible = true;
             this.dialogueText.setText(this.dialogueA[0]);
-                this.time.delayedCall(5000, function () {
-                    this.dialogueBox.visible = false;
-                    this.dialogueText.setText('');
-                }, [], this);
-            
-           
+            this.time.delayedCall(5000, function () {
+                this.dialogueBox.visible = false;
+                this.dialogueText.setText('');
+            }, [], this);
+
+
             // modification de la hitbox
         }
         this.player.setSize(14, 28).setOffset(2, 3);
@@ -298,7 +298,7 @@ export class niveau1 extends Phaser.Scene {
         this.chaine.setOrigin(0, 0.5);
 
 
-        this.ombreJoueur = this.add.sprite(0,0,'ombreJoueur');
+        this.ombreJoueur = this.add.sprite(0, 0, 'ombreJoueur');
 
 
 
@@ -365,9 +365,9 @@ export class niveau1 extends Phaser.Scene {
         this.lifeBarre.setOrigin(0, 0);
         this.lifeBarre.fixedToCamera = true;
 
-        this.etapeArme = this.physics.add.sprite(1052,410,'etapeArme');
+        this.etapeArme = this.physics.add.sprite(1052, 410, 'etapeArme');
         this.etapeArme.setScrollFactor(0);
-        this.etapeArme.setOrigin(0,0);
+        this.etapeArme.setOrigin(0, 0);
         this.etapeArme.fixedToCamera = true;
 
         this.anims.create({
@@ -473,7 +473,7 @@ export class niveau1 extends Phaser.Scene {
             frameRate: 1,
         });
         this.anims.create({
-            key: 'step0*2',
+            key: 'step2',
             frames: [{ key: 'etapeArme', frame: 2 }],
             repeat: 0,
             frameRate: 1,
@@ -616,7 +616,7 @@ export class niveau1 extends Phaser.Scene {
         }
 
         switch (this.stepArme) {
-    
+
             case 4:
                 this.etapeArme.anims.play('step4', true);
                 break;
@@ -661,7 +661,7 @@ export class niveau1 extends Phaser.Scene {
                 break;
         }
 
-        
+
     }
 
 
@@ -673,7 +673,7 @@ export class niveau1 extends Phaser.Scene {
         if (this.lifePlayer <= 0) {
             this.lifePlayer = 6;
             //this.gameOver = true;
-            this.scene.start('niveau1', { entrance: 'niveau1', priere: this.priere, lifePlayer: this.lifePlayer, /*longueurChaine: this.longueurChaine,*/ stepArme: this.stepArme, nbMaillons:this.nbMaillons }) // reset
+            this.scene.start('niveau1', { entrance: 'niveau1', priere: this.priere, lifePlayer: this.lifePlayer, /*longueurChaine: this.longueurChaine,*/ stepArme: this.stepArme, nbMaillons: this.nbMaillons }) // reset
         }
         else if (this.lifePlayer > 7) {
             this.lifePlayer = 7;
@@ -687,8 +687,8 @@ export class niveau1 extends Phaser.Scene {
             }
         });*/
 
-        this.ombreJoueur.x = this.player.x ;
-        this.ombreJoueur.y = this.player.y+3;
+        this.ombreJoueur.x = this.player.x;
+        this.ombreJoueur.y = this.player.y + 3;
 
         // Spawn des ennemis
         if (this.spawn_mob == false) {
@@ -887,7 +887,7 @@ export class niveau1 extends Phaser.Scene {
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.right.isUp && this.keyD.isUp && !this.controller.right) && (this.cursors.left.isUp && this.keyQ.isUp && !this.controller.left)) { // HAUT
                 this.player.setVelocityX(0)
-                this.player.setVelocityY(-this.speed); 
+                this.player.setVelocityY(-this.speed);
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
             }
@@ -925,9 +925,7 @@ export class niveau1 extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.keyT)) {
             console.log(this.stepArme);
             console.log(this.nbMaillons)
-            console.log(this.varTest)
-            console.log(this.player.x)
-            console.log(this.player.y)
+            console.log(this.longueurChaine)
             //this.player.setTint();
         }
 
@@ -1120,7 +1118,7 @@ export class niveau1 extends Phaser.Scene {
             this.chaine.visible = false;
         }
 
-        if (this.checkDistance(this.player.x, this.player.y, this.faux.x, this.faux.y) >= this.longueurChaine || this.atkCAC == true) { // longueur max de la chaine
+        if ((this.checkDistance(this.player.x, this.player.y, this.faux.x, this.faux.y) >= this.longueurChaine) || this.atkCAC == true) { // longueur max de la chaine
             this.faux.setVelocity(0);
             this.faux.visible = false;
             this.chaine.stop();
@@ -1141,7 +1139,7 @@ export class niveau1 extends Phaser.Scene {
         if (this.player.x < 40 && this.player.y >= 960 && this.player.y < 1024) { // Vers le niveau 2
             this.cameras.main.fadeOut(400, 0, 0, 0);
             this.time.delayedCall(400, () => {
-                this.scene.start('niveau2', { entrance: 'niveau1', priere: this.priere, lifePlayer: this.lifePlayer, /*longueurChaine: this.longueurChaine,*/ stepArme: this.stepArme,nbMaillons:this.nbMaillons })
+                this.scene.start('niveau2', { entrance: 'niveau1', priere: this.priere, lifePlayer: this.lifePlayer, /*longueurChaine: this.longueurChaine,*/ stepArme: this.stepArme, nbMaillons: this.nbMaillons })
             })
         }
         if (this.player.x > 23 * 32 && this.player.x < 25 * 32 && this.player.y < 32) { // Vers le niveau 3
@@ -1156,7 +1154,7 @@ export class niveau1 extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage maillon
 
         switch (this.stepArme) {
-    
+
             case 4:
                 this.etapeArme.anims.play('step4', true);
                 break;
@@ -1175,14 +1173,14 @@ export class niveau1 extends Phaser.Scene {
         }
 
         // maj de longueur de chaine
-        if (this.stepArme == 2){
+        if (this.stepArme == 2) {
             this.longueurChaine = 80
         }
-        else if (this.stepArme == 3){
-            this.longueurChaine == 130
+        else if (this.stepArme == 3) {
+            this.longueurChaine = 112
         }
-        else if (this.stepARme == 4){
-            this.longueurChaine = 142
+        else if (this.stepArme == 4) {
+            this.longueurChaine = 146
         }
         else {
             this.longueurChaine = 80
@@ -1208,7 +1206,7 @@ export class niveau1 extends Phaser.Scene {
 
     checkSpeak() {
 
-       
+
         if (this.dialogueBox.visible == false) {
             this.dialogueBox.visible = true;
         }
@@ -1217,8 +1215,8 @@ export class niveau1 extends Phaser.Scene {
                 this.nbMaillons = 0;
                 this.dialogueText.setText(this.dialogueB[0]);
 
-                this.time.delayedCall(1500, function () { 
-                    
+                this.time.delayedCall(1500, function () {
+
                     this.dialogueText.setText('');
                     this.cameras.main.fadeOut(600, 0, 0, 0); // fondu au noir 1,2 sec
                     this.time.delayedCall(600, () => {
@@ -1265,7 +1263,7 @@ export class niveau1 extends Phaser.Scene {
                 this.nbMaillons -= 5
                 this.dialogueText.setText(this.dialogueE[0]);
                 this.time.delayedCall(2000, function () {
-                    
+
                     this.dialogueText.setText('');
 
                     this.cameras.main.fadeOut(600, 0, 0, 0); // fondu au noir 1,2 sec
@@ -1295,7 +1293,7 @@ export class niveau1 extends Phaser.Scene {
                 this.dialogueText.setText(this.dialogueG[0]);
 
                 this.time.delayedCall(2000, function () {
-                    
+
                     this.dialogueText.setText('');
                     this.cameras.main.fadeOut(600, 0, 0, 0); // fondu au noir 1,2 sec
                     this.time.delayedCall(600, () => {
@@ -1419,11 +1417,11 @@ export class niveau1 extends Phaser.Scene {
         }
     }
     repoussement(objetQuiTape, cible) {
-
         cible.setVelocityX((cible.x - objetQuiTape.x) * 8);
         cible.setVelocityY((cible.y - objetQuiTape.y) * 8);
         this.time.delayedCall(200, () => {
             cible.setVelocity(0);
+
         });
         // cible doit s'arrêter après avoir été repoussé de quelques pixels
         // bug parce que le mob a une vitesse en mode aggro
@@ -1673,10 +1671,10 @@ export class niveau1 extends Phaser.Scene {
         this.spawn_mob = true;
 
         this.mobs.create(242, 1744, 'marcheSamurai').anims.play('mobGauche', true);
-        this.mobs.create(1617, 687, 'marcheSamurai').anims.play('mobGauche',true);
-        this.mobs.create(817, 654, 'marcheSamurai').anims.play('mobGauche',true);
-        this.mobs.create(820, 113, 'marcheSamurai').anims.play('mobGauche',true);
-        
+        this.mobs.create(1617, 687, 'marcheSamurai').anims.play('mobGauche', true);
+        this.mobs.create(817, 654, 'marcheSamurai').anims.play('mobGauche', true);
+        this.mobs.create(820, 113, 'marcheSamurai').anims.play('mobGauche', true);
+
 
 
 
@@ -1726,6 +1724,9 @@ export class niveau1 extends Phaser.Scene {
                 mob.modeAggro = true;
                 this.chaine.stop();
                 this.chaine.visible = false;
+                if (this.atkFauxCAC == false){
+                    this.faux.setVelocity(0);
+                }
                 if (mob.can_get_hit == true) {
                     mob.can_get_hit = false;
                     if (mob.stun == true) { // dégâts doublés si mob stun
