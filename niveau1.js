@@ -129,7 +129,7 @@ export class niveau1 extends Phaser.Scene {
         this.controller = false;
         // lignes de texte du mentor
         this.dialogueA = [
-            "C'est enfin le jour de ton rituel. Pour commencer, je te donne cette vieille faux. Va donc l'essayer dans la forêt."
+            "C'est enfin le jour de ton rituel. Pour commencer, je te donne cette vieille faux. Va donc l'essayer dans la forêt. (Touche F)"
         ];
         this.dialogueB = [
             "Parfait ! Laisse moi l'aiguiser un peu."
@@ -139,7 +139,7 @@ export class niveau1 extends Phaser.Scene {
             "Et voilà ! Maintenant tu peux aller prier dans la forêt de bambous et réfléchir à toutes les vies que tu vas ôter."
         ];
         this.dialogueD = [
-            "Ton rituel est presque fini, voici ton Kusarigama. Ramène moi 5 maillons et je pourrais l'améliorer."
+            "Ton rituel est presque fini, voici ton Kusarigama. Ramène moi 5 maillons et je pourrais l'améliorer. (Touche A et R)"
         ];
         this.dialogueE = [
             "Parfait ! Laisse moi un peu de temps."
@@ -1215,14 +1215,14 @@ export class niveau1 extends Phaser.Scene {
                 this.nbMaillons = 0;
                 this.dialogueText.setText(this.dialogueB[0]);
 
-                this.time.delayedCall(1500, function () {
+                this.time.delayedCall(2500, function () {
 
                     this.dialogueText.setText('');
                     this.cameras.main.fadeOut(600, 0, 0, 0); // fondu au noir 1,2 sec
                     this.time.delayedCall(600, () => {
                         this.cameras.main.fadeIn(600, 0, 0, 0);
                         this.dialogueText.setText(this.dialogueC[0]);
-                        this.time.delayedCall(3000, function () {
+                        this.time.delayedCall(4000, function () {
                             this.dialogueBox.visible = false;
                             this.dialogueText.setText('');
                         }, [], this);
@@ -1233,7 +1233,7 @@ export class niveau1 extends Phaser.Scene {
             }
             else {
                 this.dialogueText.setText(this.dialogueI[0]);
-                this.time.delayedCall(3000, function () {
+                this.time.delayedCall(4000, function () {
                     this.dialogueBox.visible = false;
                     this.dialogueText.setText('');
                 }, [], this);
@@ -1242,7 +1242,7 @@ export class niveau1 extends Phaser.Scene {
         else if (this.stepArme == 1) {
             if (this.priere == true && this.stepArme == 1) {
                 this.dialogueText.setText(this.dialogueD[0]);
-                this.time.delayedCall(3000, function () {
+                this.time.delayedCall(4000, function () {
                     this.dialogueBox.visible = false;
                     this.dialogueText.setText('');
                 }, [], this);
@@ -1251,7 +1251,7 @@ export class niveau1 extends Phaser.Scene {
             }
             else {
                 this.dialogueText.setText('Va prier dans la forêt de bambous.');
-                this.time.delayedCall(2000, function () {
+                this.time.delayedCall(3000, function () {
                     this.dialogueBox.visible = false;
                     this.dialogueText.setText('');
                 }, [], this);
@@ -1270,7 +1270,7 @@ export class niveau1 extends Phaser.Scene {
                     this.time.delayedCall(600, () => {
                         this.cameras.main.fadeIn(600, 0, 0, 0);
                         this.dialogueText.setText(this.dialogueF[0]);
-                        this.time.delayedCall(3000, function () {
+                        this.time.delayedCall(4000, function () {
                             this.dialogueBox.visible = false;
                             this.dialogueText.setText('');
                         }, [], this);
@@ -1292,14 +1292,14 @@ export class niveau1 extends Phaser.Scene {
                 this.nbMaillons -= 5
                 this.dialogueText.setText(this.dialogueG[0]);
 
-                this.time.delayedCall(2000, function () {
+                this.time.delayedCall(3000, function () {
 
                     this.dialogueText.setText('');
                     this.cameras.main.fadeOut(600, 0, 0, 0); // fondu au noir 1,2 sec
                     this.time.delayedCall(600, () => {
                         this.cameras.main.fadeIn(600, 0, 0, 0);
                         this.dialogueText.setText(this.dialogueH[0]);
-                        this.time.delayedCall(3000, function () {
+                        this.time.delayedCall(4000, function () {
                             this.dialogueBox.visible = false;
                             this.dialogueText.setText('');
                         }, [], this);
