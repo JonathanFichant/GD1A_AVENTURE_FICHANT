@@ -23,4 +23,4 @@ Manette :
 
 
 
-Si vous êtes bloqué, lancez votre poids à droite du tronc du cerisier.
+Si vous êtes bloqué après avoir obtenu votre arme complète, lancez votre poids à droite du tronc du cerisier.
