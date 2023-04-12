@@ -514,7 +514,7 @@ export class niveau3 extends Phaser.Scene {
                             this.tweens.killTweensOf(mob); // arret  de l'animation en cours
 
                             if (this.checkDistance(this.player.x, this.player.y, mob.x, mob.y) > 50) { // Si mob est assez proche, il s'arrete
-                                this.physics.moveToObject(mob, this.player, 70)
+                                this.physics.moveToObject(mob, this.player, 80)
                                 mob.modeATK = false;
                             }
                             else {

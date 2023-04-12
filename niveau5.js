@@ -49,7 +49,7 @@ export class niveau5 extends Phaser.Scene {
         this.mobX = true;
         this.temp = false;
         this.speedMob = 70;
-        this.visionRange = 130;
+        this.visionRange = 170;
         this.angleMob = 0; // sa direction, pas défaut à droite, (gauche : Math.PI, haut : Math.PI/2, bas : -Math.PI/2)
         this.fovMob = Math.PI / 2 // son champ de vision, 90 degrés ici
 
@@ -520,7 +520,7 @@ export class niveau5 extends Phaser.Scene {
                             this.tweens.killTweensOf(mob); // arret  de l'animation en cours
 
                             if (this.checkDistance(this.player.x, this.player.y, mob.x, mob.y) > 50) { // Si mob est assez proche, il s'arrete
-                                this.physics.moveToObject(mob, this.player, 70)
+                                this.physics.moveToObject(mob, this.player, 80)
                                 mob.modeATK = false;
                             }
                             else {
@@ -1169,7 +1169,7 @@ export class niveau5 extends Phaser.Scene {
             mob.dead = false;
             mob.direction = 'down';
             mob.angleVision = 0;
-
+            mob.setSize(12,28);
 
 
             this.gauche(mob, mob.modeAggro, mob.direction);
@@ -1205,6 +1205,9 @@ export class niveau5 extends Phaser.Scene {
                 mob.modeAggro = true;
                 this.chaine.stop();
                 this.chaine.visible = false;
+                if (this.atkFauxCAC == false){
+                    this.faux.setVelocity(0);
+                }
                 if (mob.can_get_hit == true) {
                     mob.can_get_hit = false;
                     if (mob.stun == true) { // dégâts doublés si mob stun

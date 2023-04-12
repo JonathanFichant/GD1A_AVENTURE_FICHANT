@@ -49,7 +49,7 @@ export class niveau1 extends Phaser.Scene {
         this.mobX = true;
         this.temp = false;
         this.speedMob = 70;
-        this.visionRange = 130;
+        this.visionRange = 170;
         this.angleMob = 0; // sa direction, pas défaut à droite, (gauche : Math.PI, haut : Math.PI/2, bas : -Math.PI/2)
         this.fovMob = Math.PI / 2 // son champ de vision, 90 degrés ici
 
@@ -785,7 +785,7 @@ export class niveau1 extends Phaser.Scene {
                             this.tweens.killTweensOf(mob); // arret  de l'animation en cours
 
                             if (this.checkDistance(this.player.x, this.player.y, mob.x, mob.y) > 50) { // Si mob est assez proche, il s'arrete
-                                this.physics.moveToObject(mob, this.player, 60)
+                                this.physics.moveToObject(mob, this.player, 80)
                                 mob.modeATK = false;
                             }
                             else {
@@ -804,7 +804,7 @@ export class niveau1 extends Phaser.Scene {
                         }
                         else { // MODE PATROUILLE
                             //console.log(mob.direction);
-                            if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < 2) { // si le joueur est trop près, le mob le détecte
+                            if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < 10) { // si le joueur est trop près, le mob le détecte
                                 mob.modeAggro = true;
                             }
                             else if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < this.visionRange) { // si le joueur est trop près, le mob le détecte
@@ -1201,7 +1201,7 @@ export class niveau1 extends Phaser.Scene {
             this.longueurChaine = 80
         }
         else if (this.stepArme == 3) {
-            this.longueurChaine = 112
+            this.longueurChaine = 108
         }
         else if (this.stepArme == 4) {
             this.longueurChaine = 146
@@ -1705,7 +1705,8 @@ export class niveau1 extends Phaser.Scene {
         this.mobs.create(820, 113, 'marcheSamurai').anims.play('mobGauche', true);
 
 
-
+        /*this.player.setSize(14, 28).setOffset(2, 3);
+        this.player.setOrigin(0.5, 0.5);*/
 
         this.mobs.children.each(function (mob) {
             mob.hp = 3;
@@ -1717,6 +1718,7 @@ export class niveau1 extends Phaser.Scene {
             mob.dead = false;
             mob.direction = 'down';
             mob.angleVision = 0;
+            mob.setSize(12,28);
 
 
 
