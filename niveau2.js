@@ -73,6 +73,7 @@ export class niveau2 extends Phaser.Scene {
         this.nbMaillons = data.nbMaillons;
         this.longueurChaine = data.longueurChaine;
         this.stepArme = data.stepArme;
+
     }
 
 
@@ -80,6 +81,7 @@ export class niveau2 extends Phaser.Scene {
         this.load.image('ombreJoueur','assets/ombreJoueur.png')
         this.load.image('poids', 'assets/poids.png');
         this.load.image('faux', 'assets/faux.png');
+        this.load.image('compteurMaillons','assets/maillon.png');
         this.load.spritesheet('chaine', 'assets/chaine.png',
             { frameWidth: 32 * 7, frameHeight: 32 });
         this.load.spritesheet('lifeBarre', 'assets/lifeBarre.png',
@@ -202,6 +204,23 @@ export class niveau2 extends Phaser.Scene {
         this.lifeBarre = this.physics.add.sprite(720, 415, 'lifeBarre'); // le sprite s'affiche 
         this.lifeBarre.setScrollFactor(0);
         this.lifeBarre.setOrigin(0, 0);
+
+        /*this.etapeArme = this.physics.add.sprite(1052, 410, 'etapeArme');
+        this.etapeArme.setScrollFactor(0);
+        this.etapeArme.setOrigin(0, 0);
+        this.etapeArme.fixedToCamera = true;*/
+
+        this.compteurMaillons = this.physics.add.sprite(724, 650, 'compteurMaillons');
+        this.compteurMaillons.setScrollFactor(0);
+        this.compteurMaillons.setOrigin(0, 0);
+        this.compteurMaillons.fixedToCamera = true;
+
+        this.compteurMaillonsText = this.add.text(744,650, 'x ' + this.nbMaillons, { font: '16px Arial', fill: '#ffffff' });
+        this.compteurMaillonsText.setScrollFactor(0);
+        this.compteurMaillonsText.setOrigin(0, 0);
+        this.compteurMaillonsText.fixedToCamera = true;
+
+
 
         this.anims.create({
             key: 'animChaine',

@@ -906,13 +906,13 @@ export class niveau3 extends Phaser.Scene {
         if (this.player.y > 580 ) { // Vers le niveau 1
             this.cameras.main.fadeOut(400, 0, 0, 0);
             this.time.delayedCall(400, () => {
-                this.scene.start('niveau1', { entrance: 'niveau1', lifePlayer:this.lifePlayer})
+                this.scene.start('niveau1', { entrance: 'niveau3', lifePlayer:this.lifePlayer})
             })
         }
         if (this.player.y < 64) { // Vers le niveau 3
             this.cameras.main.fadeOut(400, 0, 0, 0);
             this.time.delayedCall(500, () => {
-                this.scene.start('niveau4', { entrance: 'niveau4', lifePlayer:this.lifePlayer })
+                this.scene.start('niveau4', { entrance: 'niveau3', lifePlayer:this.lifePlayer })
             })
         }
 

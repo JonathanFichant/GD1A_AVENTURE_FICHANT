@@ -68,6 +68,7 @@ export class niveau1 extends Phaser.Scene {
         this.lifePlayer = data.lifePlayer;
         this.nbMaillons = data.nbMaillons
         this.stepArme = data.stepArme;
+    
 
         //variables pour lignes de dialogues comme la prière
     }
@@ -82,6 +83,7 @@ export class niveau1 extends Phaser.Scene {
         this.load.image('ombreJoueur', 'assets/ombreJoueur.png')
         this.load.spritesheet('lifeBarre', 'assets/lifeBarre.png',
             { frameWidth: 32 * 7, frameHeight: 64 });
+        this.load.image('compteurMaillons','assets/maillon.png');
         this.load.image('faux', 'assets/faux.png');
         this.load.spritesheet('chaine', 'assets/chaine.png',
             { frameWidth: 32 * 7, frameHeight: 32 });
@@ -353,7 +355,7 @@ export class niveau1 extends Phaser.Scene {
 
         this.physics.world.setBounds(0, 0, 1920, 1920); // Défini les limites où le joueur peut aller
         this.cameras.main.setBounds(0, 0, 1920, 1920); // Défini les limites de la caméra (début x, début y, fin x, fin y)
-        this.cameras.main.startFollow(this.player, false, 0.1, 0.1); //ancrage de la caméra sur l'objet player
+        this.cameras.main.startFollow(this.player, true, 0.03, 0.03); //ancrage de la caméra sur l'objet player
         this.cameras.main.setZoom(4);
 
         this.physics.add.overlap(this.faux, this.bambous, this.coupeBambou, null, this);
@@ -369,6 +371,16 @@ export class niveau1 extends Phaser.Scene {
         this.etapeArme.setScrollFactor(0);
         this.etapeArme.setOrigin(0, 0);
         this.etapeArme.fixedToCamera = true;
+
+        this.compteurMaillons = this.physics.add.sprite(724, 650, 'compteurMaillons');
+        this.compteurMaillons.setScrollFactor(0);
+        this.compteurMaillons.setOrigin(0, 0);
+        this.compteurMaillons.fixedToCamera = true;
+
+        this.compteurMaillonsText = this.add.text(744,650, 'x ' + this.nbMaillons, { font: '16px Arial', fill: '#ffffff' });
+        this.compteurMaillonsText.setScrollFactor(0);
+        this.compteurMaillonsText.setOrigin(0, 0);
+        this.compteurMaillonsText.fixedToCamera = true;
 
         this.anims.create({
             key: 'animChaine',
@@ -773,11 +785,11 @@ export class niveau1 extends Phaser.Scene {
                             this.tweens.killTweensOf(mob); // arret  de l'animation en cours
 
                             if (this.checkDistance(this.player.x, this.player.y, mob.x, mob.y) > 50) { // Si mob est assez proche, il s'arrete
-                                this.physics.moveToObject(mob, this.player, 40)
+                                this.physics.moveToObject(mob, this.player, 60)
                                 mob.modeATK = false;
                             }
                             else {
-                                mob.setVelocity(0)
+                                mob.setVelocity(0) 
                                 mob.modeATK = true;
                             }
                             if (mob.modeATK == true) {
@@ -853,15 +865,19 @@ export class niveau1 extends Phaser.Scene {
             || this.controller.right || this.controller.up || this.controller.down) { // Si aucune touche n'est appuyée alors idle
             if (this.directionPlayer == 'up') {
                 this.player.anims.play('idleUp', true);
+                
             }
             if (this.directionPlayer == 'down') {
                 this.player.anims.play('idleDown', true);
+                
             }
             if (this.directionPlayer == 'right') {
                 this.player.anims.play('idleRight', true);
+                
             }
             if (this.directionPlayer == 'left') {
                 this.player.anims.play('idleLeft', true);
+                
             }
             this.player.setVelocity(0);
         }
@@ -872,48 +888,56 @@ export class niveau1 extends Phaser.Scene {
                 this.player.setVelocityY(0)
                 this.player.anims.play('left', true);
                 this.directionPlayer = 'left';
+                this.cameras.main.setFollowOffset(32,0)
             }
             else if ((this.cursors.right.isDown || this.keyD.isDown || this.controller.right) && (this.cursors.up.isUp && this.keyZ.isUp && !this.controller.up) && (this.cursors.down.isUp && this.keyS.isUp && !this.controller.down)) { // DROITE
                 this.player.setVelocityX(this.speed); //
                 this.player.setVelocityY(0)
                 this.player.anims.play('right', true);
                 this.directionPlayer = 'right';
+                this.cameras.main.setFollowOffset(-32,0)
             }
             else if ((this.cursors.down.isDown || this.keyS.isDown || this.controller.down) && (this.cursors.right.isUp && this.keyD.isUp && !this.controller.right) && (this.cursors.left.isUp && this.keyQ.isUp && !this.controller.left)) { // BAS
                 this.player.setVelocityX(0)
                 this.player.setVelocityY(this.speed); //
                 this.player.anims.play('down', true);
                 this.directionPlayer = 'down';
+                this.cameras.main.setFollowOffset(0,-32)
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.right.isUp && this.keyD.isUp && !this.controller.right) && (this.cursors.left.isUp && this.keyQ.isUp && !this.controller.left)) { // HAUT
                 this.player.setVelocityX(0)
                 this.player.setVelocityY(-this.speed);
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
+                this.cameras.main.setFollowOffset(0,32)
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.right.isDown || this.keyD.isDown || this.controller.right)) { // HAUT DROITE
                 this.player.setVelocityX(this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(-this.speed * 0.7071);
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
+                this.cameras.main.setFollowOffset(0,32)
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.left.isDown || this.keyQ.isDown || this.controller.left)) { // HAUT GAUCHE
                 this.player.setVelocityX(-this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(-this.speed * 0.7071)
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
+                this.cameras.main.setFollowOffset(0,32)
             }
             else if ((this.cursors.down.isDown || this.keyS.isDown || this.controller.down) && (this.cursors.right.isDown || this.keyD.isDown || this.controller.right)) { // BAS DROITE
                 this.player.setVelocityX(this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(this.speed * 0.7071)
                 this.player.anims.play('down', true);
                 this.directionPlayer = 'down';
+                this.cameras.main.setFollowOffset(0,-32)
             }
             else if ((this.cursors.down.isDown || this.keyS.isDown || this.controller.down) && (this.cursors.left.isDown || this.keyQ.isDown || this.controller.left)) { // BAS GAUCHE
                 this.player.setVelocityX(-this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(this.speed * 0.7071)
                 this.player.anims.play('down', true);
                 this.directionPlayer = 'down';
+                this.cameras.main.setFollowOffset(0,-32)
             }
             /*else if (this.stunPlayer == false) { // sinon
                 this.player.setVelocity(0); //vitesse nulle
@@ -1212,7 +1236,8 @@ export class niveau1 extends Phaser.Scene {
         }
         if (this.stepArme == 0) {
             if (this.nbMaillons >= 3) {
-                this.nbMaillons = 0;
+                this.nbMaillons -= 3;
+                this.compteurMaillonsText.setText("x " + this.nbMaillons);
                 this.dialogueText.setText(this.dialogueB[0]);
 
                 this.time.delayedCall(2500, function () {
@@ -1261,6 +1286,7 @@ export class niveau1 extends Phaser.Scene {
         else if (this.stepArme == 2) {
             if (this.nbMaillons >= 5 && this.stepArme == 2) {
                 this.nbMaillons -= 5
+                this.compteurMaillonsText.setText("x " + this.nbMaillons);
                 this.dialogueText.setText(this.dialogueE[0]);
                 this.time.delayedCall(2000, function () {
 
@@ -1290,6 +1316,7 @@ export class niveau1 extends Phaser.Scene {
         else if (this.stepArme == 3) {
             if (this.nbMaillons >= 5 && this.stepArme == 3) {
                 this.nbMaillons -= 5
+                this.compteurMaillonsText.setText("x " + this.nbMaillons);
                 this.dialogueText.setText(this.dialogueG[0]);
 
                 this.time.delayedCall(3000, function () {
@@ -1343,6 +1370,7 @@ export class niveau1 extends Phaser.Scene {
 
     dropMaillon(x1, y1) {
         this.maillons.create(x1, y1, 'maillon');
+        
     }
 
 
@@ -1470,6 +1498,7 @@ export class niveau1 extends Phaser.Scene {
 
     recupMaillon(player, maillon) { // nécessite 5 maillons
         this.nbMaillons += 1;
+        this.compteurMaillonsText.setText("x " + this.nbMaillons);
         maillon.disableBody(true, true);
     }
 
