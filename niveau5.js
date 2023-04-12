@@ -520,7 +520,7 @@ export class niveau5 extends Phaser.Scene {
                             this.tweens.killTweensOf(mob); // arret  de l'animation en cours
 
                             if (this.checkDistance(this.player.x, this.player.y, mob.x, mob.y) > 50) { // Si mob est assez proche, il s'arrete
-                                this.physics.moveToObject(mob, this.player, 40)
+                                this.physics.moveToObject(mob, this.player, 70)
                                 mob.modeATK = false;
                             }
                             else {
@@ -539,7 +539,7 @@ export class niveau5 extends Phaser.Scene {
                         }
                         else { // MODE PATROUILLE
                             //console.log(mob.direction);
-                            if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < 2) { // si le joueur est trop près, le mob le détecte
+                            if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < 10) { // si le joueur est trop près, le mob le détecte
                                 mob.modeAggro = true;
                             }
                             else if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < this.visionRange) { // si le joueur est trop près, le mob le détecte

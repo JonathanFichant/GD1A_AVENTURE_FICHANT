@@ -478,40 +478,13 @@ export class niveau3 extends Phaser.Scene {
                     if (mob.body.velocity.x > 0) {
                         mob.direction = 'right'
                         mob.anims.play('mobDroite', true);
-                        /*if (Math.abs(mob.body.velocity.x) > Math.abs(mob.body.velocity.y)) {
-                            //droite
-                            mob.direction = 'right'
-                            mob.anims.play('mobDroite', true);
-                        }*/
-                        /*else if (mob.body.velocity.y >= 0) {
-                            // bas
-                            mob.direction = 'down'
-                        }
-                        else if (mob.body.velocity.y < 0) {
-                            //haut
-                            mob.direction = 'up'
-                        }*/
+                       
                     }
                     else if (mob.body.velocity.x < 0) {
                         mob.direction = 'left'
                         mob.anims.play('mobGauche', true);
-                        /*if (Math.abs(mob.body.velocity.x) > Math.abs(mob.body.velocity.y)) {
-                            //gauche
-                            mob.direction = 'left'
-                            mob.anims.play('mobGauche', true);
-                        }*/
-                        /*else if (mob.body.velocity.y >= 0) {
-                            // bas
-                            mob.direction = 'down'
-                        }
-                        else if (mob.body.velocity.y < 0) {
-                            //haut
-                            mob.direction = 'up'
-                        }*/
                     }
-                    /*else if (mob.body.velocity.x == 0){
-                        mob.anims.stop();
-                    }*/
+                    
 
                     // champ de vision selon sa direction
                     if (mob.direction == 'right') {
@@ -535,14 +508,13 @@ export class niveau3 extends Phaser.Scene {
                         this.borneMax = 135;
                     }
 
-
                     if (mob.stun == false) {
                         if (mob.modeAggro == true) { // MODE POURCHASSE & ATTAQUE
                             // arrêt du pattern de patrouille immédiat
                             this.tweens.killTweensOf(mob); // arret  de l'animation en cours
 
                             if (this.checkDistance(this.player.x, this.player.y, mob.x, mob.y) > 50) { // Si mob est assez proche, il s'arrete
-                                this.physics.moveToObject(mob, this.player, 40)
+                                this.physics.moveToObject(mob, this.player, 70)
                                 mob.modeATK = false;
                             }
                             else {
@@ -561,7 +533,7 @@ export class niveau3 extends Phaser.Scene {
                         }
                         else { // MODE PATROUILLE
                             //console.log(mob.direction);
-                            if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < 2) { // si le joueur est trop près, le mob le détecte
+                            if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < 10) { // si le joueur est trop près, le mob le détecte
                                 mob.modeAggro = true;
                             }
                             else if (this.checkDistance(mob.x, mob.y, this.player.x, this.player.y) < this.visionRange) { // si le joueur est trop près, le mob le détecte
