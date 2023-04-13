@@ -80,7 +80,7 @@ export class niveau2 extends Phaser.Scene {
     preload() { // préchargement des assets
         this.load.image('ombreJoueur','assets/ombreJoueur.png')
         this.load.image('poids', 'assets/poids.png');
-        this.load.image('faux', 'assets/faux.png');
+        //this.load.image('faux', 'assets/faux.png');
         this.load.image('compteurMaillons','assets/maillon.png');
         this.load.spritesheet('chaine', 'assets/chaine.png',
             { frameWidth: 32 * 7, frameHeight: 32 });

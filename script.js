@@ -27,7 +27,7 @@ var config = { // initialisation de phaser
     },
     pixelArt: true,
     input: { gamepad: true },
-    scene: [niveau1, menuScene, niveau2, niveau3, niveau4, niveau5, niveau6, niveau7, niveau8, sceneFin] // REMETTRE menuScene en 1er
+    scene: [menuScene, niveau1, niveau2, niveau3, niveau4, niveau5, niveau6, niveau7, niveau8, sceneFin] // REMETTRE menuScene en 1er
 };
 
 new Phaser.Game(config);

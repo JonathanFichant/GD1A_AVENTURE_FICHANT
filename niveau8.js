@@ -536,7 +536,7 @@ export class niveau8 extends Phaser.Scene {
                                 if (mob.cdATK == false) {
                                     mob.cdATK = true;
                                     //this.time.delayedCall(3000, this.attaqueMob(mob, mob.x, mob.y), [], this); // attaque au bout de 1,5 sec au CAC
-                                    this.time.delayedCall(1400, () => { // attaque au bout de 1,5 sec au CAC
+                                    this.time.delayedCall(1200, () => { // attaque au bout de 1,2 sec au CAC
                                         this.attaqueMob(mob, mob.x, mob.y, mob.dead)
                                     });
                                 }

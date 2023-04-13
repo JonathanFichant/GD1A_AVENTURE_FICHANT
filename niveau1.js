@@ -57,13 +57,23 @@ export class niveau1 extends Phaser.Scene {
 
     init(data) {
         this.entrance = data.entrance;
-        if (this.entrance == "niveau2" || this.entrance == "niveau3") {
+        if (this.entrance == "niveau2"){
             this.cameras.main.fadeIn(600, 0, 0, 0); // durée du degradé, puis valeur RVB
         }
-        else {
-            this.cameras.main.fadeIn(1400, 0, 0, 0);
+        else if (this.entrance == "niveau3"){
+            this.cameras.main.fadeIn(600, 0, 0, 0);
+            this.stepArme = 4;
         }
-        this.stepArme = 0;
+        else if (this.entrance == "menuScene"){
+            this.cameras.main.fadeIn(1400, 0, 0, 0);
+            this.stepArme = 0;
+            // stat de base à mettre
+        }
+        else { // mort du perso
+            this.cameras.main.fadeIn(1400, 0, 0, 0);
+            //this.stepArme = 0;
+        }
+        this.stepArme = data.stepArme;
         this.priere = data.priere;
         this.lifePlayer = data.lifePlayer;
         this.nbMaillons = data.nbMaillons
@@ -75,55 +85,6 @@ export class niveau1 extends Phaser.Scene {
 
 
     preload() { // préchargement des assets
-        //this.load.image('mob', 'assets/bomb.png')
-        //this.load.image('drop', 'assets/drop.png');
-        this.load.image('caisse', 'assets/caisse.png')
-        this.load.image('blocCible', 'assets/blocCible.png');
-        this.load.image('poids', 'assets/poids.png');
-        this.load.image('ombreJoueur', 'assets/ombreJoueur.png')
-        this.load.spritesheet('lifeBarre', 'assets/lifeBarre.png',
-            { frameWidth: 32 * 7, frameHeight: 64 });
-        this.load.image('compteurMaillons','assets/maillon.png');
-        this.load.image('faux', 'assets/faux.png');
-        this.load.spritesheet('chaine', 'assets/chaine.png',
-            { frameWidth: 32 * 7, frameHeight: 32 });
-        this.load.image('maillon', 'assets/maillon.png');
-        this.load.spritesheet('animStun', 'assets/animStun.png',
-            { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('etapeArme', 'assets/stepArme.png',
-            { frameWidth: 141, frameHeight: 51 });
-        this.load.image('coeur', 'assets/coeur.png');
-        //this.load.image('bomb', 'assets/bomb.png');
-        //this.load.image('porte', 'assets/porte.png');
-        this.load.image('bambous', 'assets/bambous.png');
-        this.load.image('mentor', 'assets/mentor.png');
-        this.load.image('tileset1', 'tiled/tilesetZelda.png'); //import du tileset
-        this.load.tilemapTiledJSON('niveau1', 'tiled/level1_zelda.json'); // import fichier tiled
-        /*this.load.spritesheet('link', 'assets/spritesheet_Link.png',
-            { frameWidth: 24, frameHeight: 32 });
-        this.load.spritesheet('perso', 'assets/perso.png',
-            { frameWidth: 32, frameHeight: 48 }
-        )*/
-        this.load.spritesheet('idle', 'assets/ninja_idle.png',
-            { frameWidth: 18, frameHeight: 32 }
-        )
-        this.load.spritesheet('animDroite', 'assets/ninja_marche_droite.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-        this.load.spritesheet('animGauche', 'assets/ninja_marche_gauche.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-        this.load.spritesheet('animBas', 'assets/ninja_marche_bas.png',
-            { frameWidth: 18, frameHeight: 32 }
-        )
-        this.load.spritesheet('animHaut', 'assets/ninja_marche_haut.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-        this.load.spritesheet('marcheSamurai', 'assets/samurai1_marche.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-
-
     };
 
     create() { // Création des éléments dès l'initialisation du jeu
@@ -248,7 +209,7 @@ export class niveau1 extends Phaser.Scene {
             this.lifePlayer = 6;
         }
         else {
-            this.player = this.physics.add.sprite(800, 1316, 'ninja'); //812,1316 (120y) // a corriger plus tard
+            this.player = this.physics.add.sprite(812, 1316, 'ninja'); //812,1316 (120y) // a corriger plus tard
             this.lifePlayer = 6;
             this.spawn_mob = false;
             this.nbMaillons = 0;
@@ -1205,6 +1166,8 @@ export class niveau1 extends Phaser.Scene {
         }
         else if (this.stepArme == 4) {
             this.longueurChaine = 146
+            this.compteurMaillons.visible = false;
+            this.compteurMaillonsText.visible = false;
         }
         else {
             this.longueurChaine = 80

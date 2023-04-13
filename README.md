@@ -17,10 +17,4 @@ Manette :
 - B : lancer de faux
 - Y : lancer de poids
 
-
-
-
-
-
-
-Si vous êtes bloqué après avoir obtenu votre arme complète, lancez votre poids à droite du tronc du cerisier.
+N'hésitez pas à me faire vos retours !
