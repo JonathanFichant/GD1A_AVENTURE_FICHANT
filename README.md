@@ -1,5 +1,7 @@
 # Kusarigama Chronicles
 
+Lien jouable : https://jonathanfichant.github.io/GD1A_AVENTURE_FICHANT/
+
 Input : 
 - E : interaction
 - F : attaque de faux
