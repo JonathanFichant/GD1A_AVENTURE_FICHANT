@@ -1232,11 +1232,10 @@ export class niveau8 extends Phaser.Scene {
                         this.dropCoeur(mob.x, mob.y);
                         mob.disableBody(true, true);
                         //mob.destroy();
+                        this.cameras.main.fadeOut(1000, 0, 0, 0);
                         this.time.delayedCall(2000, () => { // à voir pour une animation de mort
                             mob.destroy();
-                            this.scene.start('sceneFin')
-
-                
+                            this.scene.start('sceneFin');
                         })
                     }
                 }

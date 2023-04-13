@@ -22,18 +22,14 @@ export class niveau1 extends Phaser.Scene {
         this.speedPoids = 300;
         this.jumpGrappin = false;
         this.checkJump = false;
-        //this.longueurChaine = 131 //211 max (131 pour passer la rivière)
-        // on commence à 60 ?
         this.nbMaillons = 0;
 
         this.temp3 = 0;
         this.varTest = 0;
         this.cdClignotement = 4;
-        /*this.prevX;
-        this.prevY;*/
+        this.dialogueEnCours = false;
 
         this.keyboard;
-
         this.keyF;
         this.keyT;
         this.keyR;
@@ -121,6 +117,9 @@ export class niveau1 extends Phaser.Scene {
         this.dialogueI = [
             "Encore quelques maillons et ça sera bon."
         ]
+        this.dialogueJ = [
+            "Fais plus attention !"
+        ]
 
 
 
@@ -207,16 +206,25 @@ export class niveau1 extends Phaser.Scene {
             this.stepArme = 0;
             this.nbMaillons = 0;
             this.lifePlayer = 6;
+            this.spawn_mob = false;
+            this.dialogueBox.visible = true;
+            this.dialogueEnCours = true;
+            this.time.delayedCall(1500, function () { // Cooldown avant de pouvoir bouger
+                this.dialogueEnCours = false;
+            }, [], this);
+            this.dialogueText.setText(this.dialogueA[0]);
+            this.time.delayedCall(6000, function () {
+                this.dialogueBox.visible = false;
+                this.dialogueText.setText('');
+            }, [], this);
         }
         else {
             this.player = this.physics.add.sprite(812, 1316, 'ninja'); //812,1316 (120y) // a corriger plus tard
-            this.lifePlayer = 6;
+            this.lifePlayer = 7;
             this.spawn_mob = false;
-            this.nbMaillons = 0;
-            this.stepArme = 0;
             this.dialogueBox.visible = true;
-            this.dialogueText.setText(this.dialogueA[0]);
-            this.time.delayedCall(6000, function () {
+            this.dialogueText.setText(this.dialogueJ[0]);
+            this.time.delayedCall(4000, function () {
                 this.dialogueBox.visible = false;
                 this.dialogueText.setText('');
             }, [], this);
@@ -652,13 +660,7 @@ export class niveau1 extends Phaser.Scene {
             this.lifePlayer = 7;
         }
 
-        /*this.caisses.children.each(function (caisse) {
-            if (caisse.body.velocity.x > 0 || caisse.body.velocity.y > 0) {
-                this.time.delayedCall(200, () => {
-                    caisse.setVelocity(0);
-                });
-            }
-        });*/
+
 
         this.ombreJoueur.x = this.player.x;
         this.ombreJoueur.y = this.player.y + 3;
@@ -792,32 +794,6 @@ export class niveau1 extends Phaser.Scene {
 
         // -90 en haut, 90 en bas, 0 à droite, 180 à gauche
 
-        /*
-
-
-        /* pour plus tard
-        this.mob.setVelocityY(this.speedMob); // va vers le haut
-        this.borneMin = 90-45;
-        this.borneMax = 90;
-
-        this.mob.setVelocityY(this.speedMob); // va vers le bas
-        this.borneMin = 90-45;
-        this.borneMax = 90; // le mob voit dans son dos ?
-        */
-
-        //Math.PI / 4 désigne l'angle du champ de vision, 45 degrés ici
-
-
-        /*if ((Math.abs(this.checkAngle2(this.mob.x, this.mob.y, this.player.x, this.player.y)) <= this.borneMax) &&
-            (Math.abs(this.checkAngle2(this.mob.x, this.mob.y, this.player.x, this.player.y)) >= this.borneMin) &&
-            this.checkDistance(this.player.x, this.player.y, this.mob.x, this.mob.y) <= this.visionRange) {
-            this.modeAggro = true;
-        }
-
-        }*/
-
-
-
 
         // ANIMATION ET DEPLACEMENT 8 DIRECTIONS
 
@@ -825,25 +801,21 @@ export class niveau1 extends Phaser.Scene {
             || this.keyZ.isDown || this.keyQ.isDown || this.keyS.isDown || this.keyD.isDown) || this.checkGrappinUsed == true || this.controller.left
             || this.controller.right || this.controller.up || this.controller.down) { // Si aucune touche n'est appuyée alors idle
             if (this.directionPlayer == 'up') {
-                this.player.anims.play('idleUp', true);
-                
+                this.player.anims.play('idleUp', true);        
             }
             if (this.directionPlayer == 'down') {
                 this.player.anims.play('idleDown', true);
-                
             }
             if (this.directionPlayer == 'right') {
                 this.player.anims.play('idleRight', true);
-                
             }
             if (this.directionPlayer == 'left') {
                 this.player.anims.play('idleLeft', true);
-                
             }
             this.player.setVelocity(0);
         }
         // 8 DIRECTIONS
-        if (this.checkGrappinUsed == false && this.jumpGrappin == false && this.stunPlayer == false) { // Pendant l'animation du grappin le joueur ne peut plus bouger
+        if (this.checkGrappinUsed == false && this.jumpGrappin == false && this.stunPlayer == false && this.dialogueEnCours == false) { // Pendant l'animation du grappin le joueur ne peut plus bouger
             if ((this.cursors.left.isDown || this.keyQ.isDown || this.controller.left) && (this.cursors.up.isUp && this.keyZ.isUp && !this.controller.up) && (this.cursors.down.isUp && this.keyS.isUp && !this.controller.down)) { // GAUCHE
                 this.player.setVelocityX(-this.speed); //
                 this.player.setVelocityY(0)
@@ -908,10 +880,8 @@ export class niveau1 extends Phaser.Scene {
 
         // check variable
         if (Phaser.Input.Keyboard.JustDown(this.keyT)) {
+            console.log(this.dialogueText);
             console.log(this.stepArme);
-            console.log(this.nbMaillons)
-            console.log(this.longueurChaine)
-            //this.player.setTint();
         }
 
 
@@ -919,6 +889,11 @@ export class niveau1 extends Phaser.Scene {
         if ((Phaser.Input.Keyboard.JustDown(this.keyE) || this.controller.A) && this.checkDistance(this.player.x, this.player.y, this.mentor.x, this.mentor.y) < 64) {
             // Ligne de dialogue
             this.checkSpeak();
+            this.dialogueEnCours = true;
+            this.time.delayedCall(1500, function () { // Cooldown avant de pouvoir bouger
+                this.dialogueEnCours = false;
+            }, [], this);
+            
             //this.player.setTint(0xff0000);
 
         }
@@ -1176,19 +1151,6 @@ export class niveau1 extends Phaser.Scene {
 
 
     // FONCTIONS
-
-    /*mobReverse() { // Fonctions pour les allers retours et les pauses
-        this.mob.setVelocity(0);
-        this.time.delayedCall((Math.floor(Math.random() * 3000) + 1000), () => { // temps de pause randomisé
-            this.temp = true
-        });
-    }
-    mobReverse2() {
-        this.mob.setVelocity(0);
-        this.time.delayedCall((Math.floor(Math.random() * 3000) + 1000), () => {
-            this.mobX = true
-        });
-    }*/
 
 
     checkSpeak() {

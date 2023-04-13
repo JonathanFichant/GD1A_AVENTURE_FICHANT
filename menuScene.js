@@ -1,7 +1,3 @@
-const BG_SIZE = 512;
-var mx;
-var my;
-
 export class menuScene extends Phaser.Scene {
 
     constructor() {
@@ -35,6 +31,7 @@ export class menuScene extends Phaser.Scene {
         this.load.image('bambous', 'assets/bambous.png');
         this.load.image('mentor', 'assets/mentor.png');
         this.load.image('ecranTitre', 'assets/ecranTitreZelda.png');
+        this.load.image('ecranFin','assets/ecranFinZelda.png');
         this.load.spritesheet('idle', 'assets/ninja_idle.png',
             { frameWidth: 18, frameHeight: 32 }
         )

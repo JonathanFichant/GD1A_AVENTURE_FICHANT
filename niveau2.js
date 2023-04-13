@@ -389,6 +389,9 @@ export class niveau2 extends Phaser.Scene {
     update() {
         if (this.gameOver) { return; }
 
+        this.ombreJoueur.x = this.player.x;
+        this.ombreJoueur.y = this.player.y + 3;
+
         // ANIMATION ET DEPLACEMENT 8 DIRECTIONS
 
         if (!(this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.left.isDown || this.cursors.down.isDown

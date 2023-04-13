@@ -71,44 +71,11 @@ export class niveau4 extends Phaser.Scene {
 
 
     preload() { // préchargement des assets
-        this.load.image('mob', 'assets/bomb.png')
-        this.load.image('drop', 'assets/drop.png');
-        this.load.image('caisse', 'assets/caisse.png')
-        this.load.image('blocCible', 'assets/blocCible.png');
-        this.load.image('poids', 'assets/poids.png');
-        this.load.spritesheet('lifeBarre', 'assets/lifeBarre.png',
-            { frameWidth: 32 * 7, frameHeight: 64 });
-        this.load.image('faux', 'assets/faux.png');
-        this.load.spritesheet('chaine', 'assets/chaine.png',
-            { frameWidth: 32 * 7, frameHeight: 32 });
-        this.load.spritesheet('animStun', 'assets/animStun.png',
-            { frameWidth: 32, frameHeight: 32 });
-        this.load.image('coeur', 'assets/coeur.png');
+        
+        
         this.load.image('tileset1', 'tiled/tilesetZelda.png'); //import du tileset
         this.load.tilemapTiledJSON('niveau4', 'tiled/level4_zelda.json'); // import fichier tiled
-        this.load.spritesheet('perso', 'assets/perso.png',
-            { frameWidth: 32, frameHeight: 48 }
-        )
-        this.load.spritesheet('idle', 'assets/ninja_idle.png',
-            { frameWidth: 18, frameHeight: 32 }
-        )
-        this.load.spritesheet('animDroite', 'assets/ninja_marche_droite.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-        this.load.spritesheet('animGauche', 'assets/ninja_marche_gauche.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-        this.load.spritesheet('animBas', 'assets/ninja_marche_bas.png',
-            { frameWidth: 18, frameHeight: 32 }
-        )
-        this.load.spritesheet('animHaut', 'assets/ninja_marche_haut.png',
-            { frameWidth: 20, frameHeight: 32 }
-        )
-        this.load.spritesheet('marcheSamurai', 'assets/samurai1_marche.png',
-        { frameWidth: 20, frameHeight: 32 }
-    )
-
-    };
+        };
 
     create() { // Création des éléments dès l'initialisation du jeu
 
@@ -235,6 +202,19 @@ export class niveau4 extends Phaser.Scene {
         this.cameras.main.startFollow(this.player, false, 0.1, 0.1); //ancrage de la caméra sur l'objet player
         this.cameras.main.setZoom(4);
 
+        this.anims.create({
+            key: 'mobDroite',
+            frames: this.anims.generateFrameNumbers('marcheSamurai', { start: 0, end: 7 }),
+            repeat: -1,
+            frameRate: 13,
+        });
+        this.anims.create({
+            key: 'mobGauche',
+            frames: this.anims.generateFrameNumbers('marcheSamurai', { start: 8, end: 15 }),
+            repeat: -1,
+            frameRate: 13,
+        }); 
+        
         this.calque_Au_Dessus = this.map1.createLayer('Au_dessus', this.tileset);
 
         this.lifeBarre = this.physics.add.sprite(720, 415, 'lifeBarre'); // le sprite s'affiche 
@@ -256,18 +236,7 @@ export class niveau4 extends Phaser.Scene {
             frameRate: 5,
         });
 
-        this.anims.create({
-            key: 'mobDroite',
-            frames: this.anims.generateFrameNumbers('marcheSamurai', { start: 0, end: 7 }),
-            repeat: -1,
-            frameRate: 13,
-        });
-        this.anims.create({
-            key: 'mobGauche',
-            frames: this.anims.generateFrameNumbers('marcheSamurai', { start: 8, end: 15 }),
-            repeat: -1,
-            frameRate: 13,
-        });
+       
 
         this.anims.create({
             key: 'life7',
