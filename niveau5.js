@@ -161,16 +161,18 @@ export class niveau5 extends Phaser.Scene {
         if (this.entrance == 'niveau4') {
             this.player = this.physics.add.sprite(64, 96, 'ninja');
             this.spawn_mob = false;
+            this.longueurChaine = 146;
         }
         else if (this.entrance == 'niveau6') {
             this.player = this.physics.add.sprite(17*32, 8*32, 'ninja');
             this.spwan_mob = false;
+            this.longueurChaine = 146;
         }
         else {
             this.player = this.physics.add.sprite(64, 96, 'ninja'); //812,1316
             this.lifePlayer = 6;
             this.spawn_mob = false;
-            this.longueurChaine = 60;
+            this.longueurChaine = 146;
             
         }
         this.player.setOrigin(0.5, 0.5);

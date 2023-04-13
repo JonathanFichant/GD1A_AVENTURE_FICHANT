@@ -22,8 +22,6 @@ export class niveau3 extends Phaser.Scene {
         this.speedPoids = 300;
         this.jumpGrappin = false;
         this.checkJump = false;
-        //this.longueurChaine = 60 //211 max (131 pour passer la rivière) 140 à partir du niveau 3
-        // on commence à 60 ?
         this.nbMaillons = 0;
 
         this.temp3 = 0;
@@ -161,19 +159,19 @@ export class niveau3 extends Phaser.Scene {
         if (this.entrance == 'niveau1') {
             this.player = this.physics.add.sprite(112, 576, 'ninja');
             this.spawn_mob = false;
-            this.longueurChaine = 140;
+            this.longueurChaine = 146;
         }
         else if (this.entrance == 'niveau4') {
             this.player = this.physics.add.sprite(800, 96, 'ninja');
             this.spwan_mob = false;
-            this.longueurChaine = 140;
+            this.longueurChaine = 146;
 
         }
         else {
             this.player = this.physics.add.sprite(112, 576, 'ninja'); //812,1316
             this.lifePlayer = 6;
             this.spawn_mob = false;
-            this.longueurChaine = 140;
+            this.longueurChaine = 146;
             
         }
         

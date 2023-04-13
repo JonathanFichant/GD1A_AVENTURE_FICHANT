@@ -164,12 +164,13 @@ export class niveau8 extends Phaser.Scene {
         if (this.entrance == 'niveau7') {
             this.player = this.physics.add.sprite(17*32, 6*32, 'ninja');
             this.spawn_mob = false;
+            this.longueurChaine = 146;
         }
         else {
             this.player = this.physics.add.sprite(17*32, 6*32, 'ninja'); 
             this.lifePlayer = 7;
             this.spawn_mob = false;
-            this.longueurChaine = 211;
+            this.longueurChaine = 146;
             
         }
         this.player.setOrigin(0.5, 0.5);

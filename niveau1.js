@@ -88,7 +88,7 @@ export class niveau1 extends Phaser.Scene {
         this.controller = false;
         // lignes de texte du mentor
         this.dialogueA = [
-            "C'est enfin le jour de ton rituel. Pour commencer, je te donne cette vieille faux. Va donc l'essayer dans la forêt. (Touche F)"
+            "C'est enfin le jour de ton rituel. Pour commencer, je te donne cette vieille faux. Va donc l'essayer dans la forêt. (Attaque : Touche F     Interaction : Touche E)"
         ];
         this.dialogueB = [
             "Parfait ! Laisse moi l'aiguiser un peu."
@@ -112,7 +112,7 @@ export class niveau1 extends Phaser.Scene {
         ];
         //Fondu
         this.dialogueH = [
-            "Voilà enfin un véritable Kusarigama ! Tu es maintenant équipé pour aller renverser le daimyo. Bon courage."
+            "Voilà enfin un véritable Kusarigama ! Tu es maintenant équipé pour aller renverser le daimyo. Le cerisier te guidera. Bon courage."
         ];
         this.dialogueI = [
             "Encore quelques maillons et ça sera bon."
