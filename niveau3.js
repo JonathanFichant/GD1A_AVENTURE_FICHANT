@@ -1240,6 +1240,9 @@ export class niveau3 extends Phaser.Scene {
                 mob.modeAggro = true;
                 this.chaine.stop();
                 this.chaine.visible = false;
+                if (this.atkFauxCAC == false){
+                    this.faux.setVelocity(0);
+                }
                 if (mob.can_get_hit == true) {
                     mob.can_get_hit = false;
                     if (mob.stun == true) { // dégâts doublés si mob stun
