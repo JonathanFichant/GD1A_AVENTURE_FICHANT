@@ -23,5 +23,6 @@ Manette :
 N'hésitez pas à me faire vos retours !
 
 
+La première zone peut souffir de ralentissements. Ce n'est pas le cas des autres zones.
 
 Projet étudiant d'un mois entièrement seul dans le cadre d'une 1ère année Création de Jeux Vidéo.
