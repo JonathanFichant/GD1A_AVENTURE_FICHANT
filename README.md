@@ -11,6 +11,7 @@ Input :
 Directions : 
 - ZQSD
 - Flèches
+- Pad directionnel
 
 
 Manette : 
