@@ -20,3 +20,7 @@ Manette :
 - Y : lancer de poids
 
 N'hésitez pas à me faire vos retours !
+
+
+
+Projet étudiant d'un mois en solo dans le cadre d'une 1ère année Création de Jeux Vidéo.
