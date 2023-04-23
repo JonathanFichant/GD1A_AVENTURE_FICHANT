@@ -1111,10 +1111,9 @@ export class niveau1 extends Phaser.Scene {
 
 
         this.physics.add.overlap(this.player, this.maillons, this.recupMaillon, null, this)  // ramassage maillon
-        this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage maillon
+        this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage coeur
 
         switch (this.stepArme) {
-
             case 4:
                 this.etapeArme.anims.play('step4', true);
                 break;
