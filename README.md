@@ -24,4 +24,4 @@ N'hésitez pas à me faire vos retours !
 
 
 
-Projet étudiant d'un mois en solo dans le cadre d'une 1ère année Création de Jeux Vidéo.
+Projet étudiant d'un mois entièrement seul dans le cadre d'une 1ère année Création de Jeux Vidéo.
