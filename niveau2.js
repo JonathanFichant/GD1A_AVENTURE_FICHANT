@@ -352,6 +352,8 @@ export class niveau2 extends Phaser.Scene {
         }
 
         this.physics.add.overlap(this.faux, this.bambous, this.coupeBambou, null, this);
+        this.physics.add.overlap(this.player, this.maillon, this.recupMaillon, null, this)  // ramassage maillon
+        this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage maillon
 
         switch (this.lifePlayer) {
             case 7:
@@ -683,7 +685,7 @@ export class niveau2 extends Phaser.Scene {
 
 
 
-        this.physics.add.overlap(this.poids, this.blocCible, function () { // collision poids et bloc cible
+        /*this.physics.add.overlap(this.poids, this.blocCible, function () { // collision poids et bloc cible
             this.jumpGrappin = true;
             //this.player.x = this.blocCible.x;
             //this.player.y -= 1
@@ -692,9 +694,9 @@ export class niveau2 extends Phaser.Scene {
             this.chaine.stop();
             this.poids.visible = false;
             this.chaine.visible = false;
-        }, null, this);
+        }, null, this);*/
 
-        if (this.jumpGrappin == true) {
+        /*if (this.jumpGrappin == true) {
             if (this.directionPlayer == 'up') {
                 if (this.player.y > this.blocCible.y) {
                     this.player.y -= 6
@@ -730,7 +732,7 @@ export class niveau2 extends Phaser.Scene {
             else {
                 this.jumpGrappin = false;
             }
-        }
+        }*/
 
         if (this.player.x > 592 && this.player.y > 760) { // Vers le niveau 1
             this.cameras.main.fadeOut(400, 0, 0, 0);
@@ -738,9 +740,6 @@ export class niveau2 extends Phaser.Scene {
                 this.scene.start('niveau1', { entrance: "niveau2", priere: this.priere, lifePlayer: this.lifePlayer, longueurChaine: this.longueurChaine, stepArme:this.stepArme, nbMaillons:this.nbMaillons})
             })
         }
-
-        this.physics.add.overlap(this.player, this.maillon, this.recupMaillon, null, this)  // ramassage maillon
-        this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage maillon
 
     }
 

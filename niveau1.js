@@ -529,63 +529,6 @@ export class niveau1 extends Phaser.Scene {
             repeat: -1
         });
 
-        /*
-                this.anims.create({
-                    key: 'idleRight',
-                    frames: this.anims.generateFrameNumbers('link', { start: 0, end: 0 }),
-                    frameRate: 1,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'idleUp',
-                    frames: this.anims.generateFrameNumbers('link', { start: 11, end: 11 }),
-                    frameRate: 1,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'idleLeft',
-                    frames: this.anims.generateFrameNumbers('link', { start: 33, end: 33 }),
-                    frameRate: 1,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'idleDown',
-                    frames: this.anims.generateFrameNumbers('link', { start: 44, end: 44 }),
-                    frameRate: 1,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'left',
-                    frames: this.anims.generateFrameNumbers('link', { start: 33, end: 40 }),
-                    frameRate: 13,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'right',
-                    frames: this.anims.generateFrameNumbers('link', { start: 0, end: 7 }),
-                    frameRate: 13,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'down',
-                    frames: this.anims.generateFrameNumbers('link', { start: 44, end: 51 }),
-                    frameRate: 13,
-                    repeat: -1
-                });
-        
-                this.anims.create({
-                    key: 'up',
-                    frames: this.anims.generateFrameNumbers('link', { start: 11, end: 18 }),
-                    frameRate: 13,
-                    repeat: -1
-                });*/
-
         if (this.entrance == 'niveau2') {
             this.directionPlayer = 'right';
         }
@@ -642,6 +585,9 @@ export class niveau1 extends Phaser.Scene {
                 break;
         }
 
+        this.physics.add.overlap(this.poids, this.blocsCible, this.jump, null, this) // collision poids et bloc cible = grappin
+        this.physics.add.overlap(this.player, this.maillons, this.recupMaillon, null, this)  // ramassage maillon
+        this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage coeur
 
     }
 
@@ -893,15 +839,11 @@ export class niveau1 extends Phaser.Scene {
             this.time.delayedCall(1500, function () { // Cooldown avant de pouvoir bouger
                 this.dialogueEnCours = false;
             }, [], this);
-            
-            //this.player.setTint(0xff0000);
-
         }
 
 
 
         // ATTAQUE AU CAC
-
 
         if ((Phaser.Input.Keyboard.JustDown(this.keyF) || this.controller.X) && this.cdGrappin == false) { // Attaque au CAC
             this.cdGrappin = true;
@@ -1010,6 +952,9 @@ export class niveau1 extends Phaser.Scene {
             }
         }
 
+
+        // ATTAQUE A DISTANCE
+
         if ((Phaser.Input.Keyboard.JustDown(this.keyA) || this.controller.B) && this.cdGrappin == false && this.stepArme > 1) { // lancer de faux
             this.cdGrappin = true;
             this.time.delayedCall(700, function () {
@@ -1088,7 +1033,7 @@ export class niveau1 extends Phaser.Scene {
 
 
 
-        this.physics.add.overlap(this.poids, this.blocsCible, this.jump, null, this) // collision poids et bloc cible = grappin
+        
 
 
 
@@ -1110,8 +1055,7 @@ export class niveau1 extends Phaser.Scene {
         }
 
 
-        this.physics.add.overlap(this.player, this.maillons, this.recupMaillon, null, this)  // ramassage maillon
-        this.physics.add.overlap(this.player, this.coeur, this.recupCoeur, null, this)  // ramassage coeur
+       
 
         switch (this.stepArme) {
             case 4:
