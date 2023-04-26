@@ -64,7 +64,7 @@ export class niveau2 extends Phaser.Scene {
     init(data) {
         this.entrance = data.entrance;
         if (this.entrance == "niveau1")
-            this.cameras.main.fadeIn(600, 0, 0, 0); // durée du degradé, puis valeur RVB
+            this.cameras.main.fadeIn(1000, 0, 0, 0); // durée du degradé, puis valeur RVB
         else {
             this.cameras.main.fadeIn(1400, 0, 0, 0);
         }
@@ -485,10 +485,11 @@ export class niveau2 extends Phaser.Scene {
             // bloquer la prière tant que le mentor ne l'a pas demandé ou rendre inaccessible le niveau avant
             if (this.priere != true) {
                 this.priere = true;
-                // pas réussi à bloquer les input pendant la prière
+                this.stunPlayer = true;
                 this.cameras.main.fadeOut(600, 255, 255, 255);
                 this.time.delayedCall(600, () => {
                     this.cameras.main.fadeIn(600, 255, 255, 255);
+                    this.stunPlayer = false;
                 })
             }
 
@@ -735,8 +736,8 @@ export class niveau2 extends Phaser.Scene {
         }*/
 
         if (this.player.x > 592 && this.player.y > 760) { // Vers le niveau 1
-            this.cameras.main.fadeOut(400, 0, 0, 0);
-            this.time.delayedCall(500, () => {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            this.time.delayedCall(1000, () => {
                 this.scene.start('niveau1', { entrance: "niveau2", priere: this.priere, lifePlayer: this.lifePlayer, longueurChaine: this.longueurChaine, stepArme:this.stepArme, nbMaillons:this.nbMaillons})
             })
         }

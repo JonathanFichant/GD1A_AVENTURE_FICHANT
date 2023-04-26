@@ -55,7 +55,7 @@ export class niveau3 extends Phaser.Scene {
     init(data) {
         this.entrance = data.entrance;
         if (this.entrance == "niveau1" || this.entrance == "niveau4")
-            this.cameras.main.fadeIn(600, 0, 0, 0); // durée du degradé, puis valeur RVB
+            this.cameras.main.fadeIn(1000, 0, 0, 0); // durée du degradé, puis valeur RVB
         else {
             this.cameras.main.fadeIn(1400, 0, 0, 0);
         }

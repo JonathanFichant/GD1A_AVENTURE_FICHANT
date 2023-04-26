@@ -53,14 +53,14 @@ export class niveau1 extends Phaser.Scene {
 
     init(data) {
         this.entrance = data.entrance;
-        if (this.entrance == "niveau2"){
-            this.cameras.main.fadeIn(600, 0, 0, 0); // durée du degradé, puis valeur RVB
+        if (this.entrance == "niveau2") {
+            this.cameras.main.fadeIn(1000, 0, 0, 0); // durée du degradé, puis valeur RVB
         }
-        else if (this.entrance == "niveau3"){
-            this.cameras.main.fadeIn(600, 0, 0, 0);
+        else if (this.entrance == "niveau3") {
+            this.cameras.main.fadeIn(1000, 0, 0, 0);
             this.stepArme = 4;
         }
-        else if (this.entrance == "menuScene"){
+        else if (this.entrance == "menuScene") {
             this.cameras.main.fadeIn(1400, 0, 0, 0);
             this.stepArme = 0;
             // stat de base à mettre
@@ -74,7 +74,7 @@ export class niveau1 extends Phaser.Scene {
         this.lifePlayer = data.lifePlayer;
         this.nbMaillons = data.nbMaillons
         this.stepArme = data.stepArme;
-    
+
 
         //variables pour lignes de dialogues comme la prière
     }
@@ -112,7 +112,7 @@ export class niveau1 extends Phaser.Scene {
         ];
         //Fondu
         this.dialogueH = [
-            "Voilà enfin un véritable Kusarigama ! Tu es maintenant équipé pour aller renverser le daimyo. Le cerisier te guidera. Bon courage."
+            "Voilà enfin un véritable Kusarigama ! Tu es maintenant équipé pour aller renverser le daimyo. Le CERISIER te guidera. Bon courage."
         ];
         this.dialogueI = [
             "Encore quelques maillons et ça sera bon."
@@ -183,13 +183,9 @@ export class niveau1 extends Phaser.Scene {
             this.blocCible.visible = false;
         })
 
-        this.dialogueBox = this.add.graphics()//.setScrollFactor(0);
-        this.dialogueBox.fillStyle(0x222222, 0.8);
-        this.dialogueBox.visible = false;
-        this.dialogueBox.fillRect(682, 1350, 300, 80);
 
-        this.dialogueText = this.add.text(690, 1370, '', { font: '12px Arial', fill: '#ffffff' })//.setScrollFactor(0);
-        this.dialogueText.setWordWrapWidth(280); // retour à la ligne au bout de 600 px
+
+
 
         // SPAWN
 
@@ -202,36 +198,21 @@ export class niveau1 extends Phaser.Scene {
             this.spwan_mob = false;
         }
         else if (this.entrance == "menuScene") {
-            this.player = this.physics.add.sprite(812, 1316, 'ninja');
+            this.player = this.physics.add.sprite(812, 1316, 'ninja'); //812/1316
             this.stepArme = 0;
             this.nbMaillons = 0;
             this.lifePlayer = 6;
             this.spawn_mob = false;
-            this.dialogueBox.visible = true;
-            this.dialogueEnCours = true;
-            this.time.delayedCall(1500, function () { // Cooldown avant de pouvoir bouger
-                this.dialogueEnCours = false;
-            }, [], this);
-            this.dialogueText.setText(this.dialogueA[0]);
-            this.time.delayedCall(6000, function () {
-                this.dialogueBox.visible = false;
-                this.dialogueText.setText('');
-            }, [], this);
         }
         else {
             this.player = this.physics.add.sprite(812, 1316, 'ninja'); //812,1316 (120y) // a corriger plus tard
             this.lifePlayer = 7;
             this.spawn_mob = false;
-            this.dialogueBox.visible = true;
-            this.dialogueText.setText(this.dialogueJ[0]);
-            this.time.delayedCall(4000, function () {
-                this.dialogueBox.visible = false;
-                this.dialogueText.setText('');
-            }, [], this);
-
-
-            // modification de la hitbox
         }
+
+
+        // modification de la hitbox
+
         this.player.setSize(14, 28).setOffset(2, 3);
         this.player.setOrigin(0.5, 0.5);
         this.player.setCollideWorldBounds(true);
@@ -320,12 +301,13 @@ export class niveau1 extends Phaser.Scene {
         this.mentor = this.physics.add.staticSprite(820, 1276, 'mentor');
         this.physics.add.collider(this.player, this.mentor);
 
-
+        // CAMERA
 
         this.physics.world.setBounds(0, 0, 1920, 1920); // Défini les limites où le joueur peut aller
         this.cameras.main.setBounds(0, 0, 1920, 1920); // Défini les limites de la caméra (début x, début y, fin x, fin y)
-        this.cameras.main.startFollow(this.player, true, 0.03, 0.03); //ancrage de la caméra sur l'objet player
+        this.cameras.main.startFollow(this.player, true, 0.04, 0.04); //ancrage de la caméra sur l'objet player
         this.cameras.main.setZoom(4);
+        this.cameraOffset = 50;
 
         this.physics.add.overlap(this.faux, this.bambous, this.coupeBambou, null, this);
 
@@ -346,10 +328,26 @@ export class niveau1 extends Phaser.Scene {
         this.compteurMaillons.setOrigin(0, 0);
         this.compteurMaillons.fixedToCamera = true;
 
-        this.compteurMaillonsText = this.add.text(744,650, 'x ' + this.nbMaillons, { font: '16px Arial', fill: '#ffffff' });
+        this.compteurMaillonsText = this.add.text(744, 650, 'x ' + this.nbMaillons, { font: '16px Arial', fill: '#ffffff' });
         this.compteurMaillonsText.setScrollFactor(0);
         this.compteurMaillonsText.setOrigin(0, 0);
         this.compteurMaillonsText.fixedToCamera = true;
+
+        this.dialogueBox = this.add.graphics()//.setScrollFactor(0);
+        this.dialogueBox.fillStyle(0x222222, 0.8);
+        this.dialogueBox.visible = false;
+        this.dialogueBox.fillRect(815, 580, 300, 80);
+        this.dialogueBox.setScrollFactor(0);
+        this.dialogueBox.fixedToCamera = true;
+
+        this.dialogueText = this.add.text(832,590, '', { font: '12px Arial', fill: '#ffffff' }); // 690 1370
+        this.dialogueText.setScrollFactor(0);
+        this.dialogueText.setWordWrapWidth(280); // retour à la ligne au bout de 600 px
+        this.dialogueText.setOrigin(0, 0);
+        this.dialogueText.fixedToCamera = true;
+
+
+
 
         this.anims.create({
             key: 'animChaine',
@@ -535,10 +533,29 @@ export class niveau1 extends Phaser.Scene {
         else if (this.entrance == 'niveau3') {
             this.directionPlayer = 'down';
         }
-        else {
+        else if (this.entrance == "menuScene"){
+            this.dialogueBox.visible = true;
+            this.dialogueEnCours = true;
+            this.time.delayedCall(1500, function () { // Cooldown avant de pouvoir bouger
+                this.dialogueEnCours = false;
+            }, [], this);
+            this.dialogueText.setText(this.dialogueA[0]);
+            this.time.delayedCall(9000, function () {
+                this.dialogueBox.visible = false;
+                this.dialogueText.setText('');
+            }, [], this);
+        }
+        else if (this.entrance == 'niveau1') {
+            this.dialogueBox.visible = true;
+            this.dialogueText.setText(this.dialogueJ[0]);
+            this.time.delayedCall(4000, function () {
+                this.dialogueBox.visible = false;
+                this.dialogueText.setText('');
+            }, [], this);
             this.directionPlayer = 'down';
         }
 
+        
         switch (this.stepArme) {
 
             case 4:
@@ -698,7 +715,7 @@ export class niveau1 extends Phaser.Scene {
                                 mob.modeATK = false;
                             }
                             else {
-                                mob.setVelocity(0) 
+                                mob.setVelocity(0)
                                 mob.modeATK = true;
                             }
                             if (mob.modeATK == true) {
@@ -747,7 +764,7 @@ export class niveau1 extends Phaser.Scene {
             || this.keyZ.isDown || this.keyQ.isDown || this.keyS.isDown || this.keyD.isDown) || this.checkGrappinUsed == true || this.controller.left
             || this.controller.right || this.controller.up || this.controller.down) { // Si aucune touche n'est appuyée alors idle
             if (this.directionPlayer == 'up') {
-                this.player.anims.play('idleUp', true);        
+                this.player.anims.play('idleUp', true);
             }
             if (this.directionPlayer == 'down') {
                 this.player.anims.play('idleDown', true);
@@ -767,56 +784,56 @@ export class niveau1 extends Phaser.Scene {
                 this.player.setVelocityY(0)
                 this.player.anims.play('left', true);
                 this.directionPlayer = 'left';
-                this.cameras.main.setFollowOffset(32,0)
+                this.cameras.main.setFollowOffset(this.cameraOffset, 0)
             }
             else if ((this.cursors.right.isDown || this.keyD.isDown || this.controller.right) && (this.cursors.up.isUp && this.keyZ.isUp && !this.controller.up) && (this.cursors.down.isUp && this.keyS.isUp && !this.controller.down)) { // DROITE
                 this.player.setVelocityX(this.speed); //
                 this.player.setVelocityY(0)
                 this.player.anims.play('right', true);
                 this.directionPlayer = 'right';
-                this.cameras.main.setFollowOffset(-32,0)
+                this.cameras.main.setFollowOffset(-this.cameraOffset, 0)
             }
             else if ((this.cursors.down.isDown || this.keyS.isDown || this.controller.down) && (this.cursors.right.isUp && this.keyD.isUp && !this.controller.right) && (this.cursors.left.isUp && this.keyQ.isUp && !this.controller.left)) { // BAS
                 this.player.setVelocityX(0)
                 this.player.setVelocityY(this.speed); //
                 this.player.anims.play('down', true);
                 this.directionPlayer = 'down';
-                this.cameras.main.setFollowOffset(0,-32)
+                this.cameras.main.setFollowOffset(0, -this.cameraOffset)
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.right.isUp && this.keyD.isUp && !this.controller.right) && (this.cursors.left.isUp && this.keyQ.isUp && !this.controller.left)) { // HAUT
                 this.player.setVelocityX(0)
                 this.player.setVelocityY(-this.speed);
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
-                this.cameras.main.setFollowOffset(0,32)
+                this.cameras.main.setFollowOffset(0, this.cameraOffset)
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.right.isDown || this.keyD.isDown || this.controller.right)) { // HAUT DROITE
                 this.player.setVelocityX(this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(-this.speed * 0.7071);
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
-                this.cameras.main.setFollowOffset(0,32)
+                this.cameras.main.setFollowOffset(0, this.cameraOffset)
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.left.isDown || this.keyQ.isDown || this.controller.left)) { // HAUT GAUCHE
                 this.player.setVelocityX(-this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(-this.speed * 0.7071)
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
-                this.cameras.main.setFollowOffset(0,32)
+                this.cameras.main.setFollowOffset(0, this.cameraOffset)
             }
             else if ((this.cursors.down.isDown || this.keyS.isDown || this.controller.down) && (this.cursors.right.isDown || this.keyD.isDown || this.controller.right)) { // BAS DROITE
                 this.player.setVelocityX(this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(this.speed * 0.7071)
                 this.player.anims.play('down', true);
                 this.directionPlayer = 'down';
-                this.cameras.main.setFollowOffset(0,-32)
+                this.cameras.main.setFollowOffset(0, -this.cameraOffset)
             }
             else if ((this.cursors.down.isDown || this.keyS.isDown || this.controller.down) && (this.cursors.left.isDown || this.keyQ.isDown || this.controller.left)) { // BAS GAUCHE
                 this.player.setVelocityX(-this.speed * 0.7071); //alors vitesse positive en X
                 this.player.setVelocityY(this.speed * 0.7071)
                 this.player.anims.play('down', true);
                 this.directionPlayer = 'down';
-                this.cameras.main.setFollowOffset(0,-32)
+                this.cameras.main.setFollowOffset(0, -this.cameraOffset)
             }
             /*else if (this.stunPlayer == false) { // sinon
                 this.player.setVelocity(0); //vitesse nulle
@@ -835,10 +852,7 @@ export class niveau1 extends Phaser.Scene {
         if ((Phaser.Input.Keyboard.JustDown(this.keyE) || this.controller.A) && this.checkDistance(this.player.x, this.player.y, this.mentor.x, this.mentor.y) < 64) {
             // Ligne de dialogue
             this.checkSpeak();
-            this.dialogueEnCours = true;
-            this.time.delayedCall(1500, function () { // Cooldown avant de pouvoir bouger
-                this.dialogueEnCours = false;
-            }, [], this);
+            
         }
 
 
@@ -1033,7 +1047,7 @@ export class niveau1 extends Phaser.Scene {
 
 
 
-        
+
 
 
 
@@ -1042,20 +1056,20 @@ export class niveau1 extends Phaser.Scene {
 
 
         if (this.player.x < 40 && this.player.y >= 960 && this.player.y < 1024) { // Vers le niveau 2
-            this.cameras.main.fadeOut(400, 0, 0, 0);
-            this.time.delayedCall(400, () => {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            this.time.delayedCall(1000, () => {
                 this.scene.start('niveau2', { entrance: 'niveau1', priere: this.priere, lifePlayer: this.lifePlayer, /*longueurChaine: this.longueurChaine,*/ stepArme: this.stepArme, nbMaillons: this.nbMaillons })
             })
         }
         if (this.player.x > 23 * 32 && this.player.x < 25 * 32 && this.player.y < 32) { // Vers le niveau 3
-            this.cameras.main.fadeOut(400, 0, 0, 0);
-            this.time.delayedCall(500, () => {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            this.time.delayedCall(1000, () => {
                 this.scene.start('niveau3', { entrance: 'niveau1', lifePlayer: this.lifePlayer })
             })
         }
 
 
-       
+
 
         switch (this.stepArme) {
             case 4:
@@ -1108,6 +1122,11 @@ export class niveau1 extends Phaser.Scene {
                 this.compteurMaillonsText.setText("x " + this.nbMaillons);
                 this.dialogueText.setText(this.dialogueB[0]);
 
+                this.dialogueEnCours = true;
+                this.time.delayedCall(3500, function () { // Cooldown avant de pouvoir bouger
+                    this.dialogueEnCours = false;
+                }, [], this);
+
                 this.time.delayedCall(2500, function () {
 
                     this.dialogueText.setText('');
@@ -1115,7 +1134,7 @@ export class niveau1 extends Phaser.Scene {
                     this.time.delayedCall(600, () => {
                         this.cameras.main.fadeIn(600, 0, 0, 0);
                         this.dialogueText.setText(this.dialogueC[0]);
-                        this.time.delayedCall(4000, function () {
+                        this.time.delayedCall(5000, function () {
                             this.dialogueBox.visible = false;
                             this.dialogueText.setText('');
                         }, [], this);
@@ -1125,7 +1144,7 @@ export class niveau1 extends Phaser.Scene {
                 }, [], this);
             }
             else {
-                this.dialogueText.setText(this.dialogueI[0]);
+                this.dialogueText.setText(this.dialogueI[0],{font:'19px Arial', fill : '#ff0000'});
                 this.time.delayedCall(4000, function () {
                     this.dialogueBox.visible = false;
                     this.dialogueText.setText('');
@@ -1135,7 +1154,7 @@ export class niveau1 extends Phaser.Scene {
         else if (this.stepArme == 1) {
             if (this.priere == true && this.stepArme == 1) {
                 this.dialogueText.setText(this.dialogueD[0]);
-                this.time.delayedCall(4000, function () {
+                this.time.delayedCall(6000, function () {
                     this.dialogueBox.visible = false;
                     this.dialogueText.setText('');
                 }, [], this);
@@ -1156,6 +1175,12 @@ export class niveau1 extends Phaser.Scene {
                 this.nbMaillons -= 5
                 this.compteurMaillonsText.setText("x " + this.nbMaillons);
                 this.dialogueText.setText(this.dialogueE[0]);
+
+                this.dialogueEnCours = true;
+                this.time.delayedCall(3000, function () { // Cooldown avant de pouvoir bouger
+                this.dialogueEnCours = false;
+            }, [], this);
+
                 this.time.delayedCall(2000, function () {
 
                     this.dialogueText.setText('');
@@ -1187,14 +1212,18 @@ export class niveau1 extends Phaser.Scene {
                 this.compteurMaillonsText.setText("x " + this.nbMaillons);
                 this.dialogueText.setText(this.dialogueG[0]);
 
-                this.time.delayedCall(3000, function () {
+                this.dialogueEnCours = true;
+                this.time.delayedCall(4000, function () { // Cooldown avant de pouvoir bouger
+                    this.dialogueEnCours = false;
+                }, [], this);
 
+                this.time.delayedCall(3000, function () {
                     this.dialogueText.setText('');
                     this.cameras.main.fadeOut(600, 0, 0, 0); // fondu au noir 1,2 sec
                     this.time.delayedCall(600, () => {
                         this.cameras.main.fadeIn(600, 0, 0, 0);
                         this.dialogueText.setText(this.dialogueH[0]);
-                        this.time.delayedCall(4000, function () {
+                        this.time.delayedCall(7000, function () {
                             this.dialogueBox.visible = false;
                             this.dialogueText.setText('');
                         }, [], this);
@@ -1212,7 +1241,8 @@ export class niveau1 extends Phaser.Scene {
         }
         else if (this.stepArme == 4) {
             this.dialogueText.setText(this.dialogueH[0]);
-            this.time.delayedCall(3000, function () {
+            //   this.dialogueText = this.add.text(832,590, '', { font: '12px Arial', fill: '#ffffff' });
+            this.time.delayedCall(5000, function () {
                 this.dialogueBox.visible = false;
                 this.dialogueText.setText('');
             }, [], this);
@@ -1238,7 +1268,7 @@ export class niveau1 extends Phaser.Scene {
 
     dropMaillon(x1, y1) {
         this.maillons.create(x1, y1, 'maillon');
-        
+
     }
 
 
@@ -1586,7 +1616,7 @@ export class niveau1 extends Phaser.Scene {
             mob.dead = false;
             mob.direction = 'down';
             mob.angleVision = 0;
-            mob.setSize(12,28);
+            mob.setSize(12, 28);
 
 
 
@@ -1623,7 +1653,7 @@ export class niveau1 extends Phaser.Scene {
                 mob.modeAggro = true;
                 this.chaine.stop();
                 this.chaine.visible = false;
-                if (this.atkFauxCAC == false){
+                if (this.atkFauxCAC == false) {
                     this.faux.setVelocity(0);
                 }
                 if (mob.can_get_hit == true) {

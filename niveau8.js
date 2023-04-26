@@ -12,7 +12,7 @@ export class niveau8 extends Phaser.Scene {
         this.atkCAC = false;
         this.atkFauxCAC = false;
         this.stunPlayer = false;
-       
+
 
         // faux + poids
 
@@ -104,11 +104,11 @@ export class niveau8 extends Phaser.Scene {
             { frameWidth: 20, frameHeight: 32 }
         )
         this.load.spritesheet('marcheBossGauche', 'assets/samurai2_marche_gauche.png',
-        { frameWidth: 20, frameHeight: 32 }
+            { frameWidth: 20, frameHeight: 32 }
         )
         this.load.spritesheet('marcheBossDroite', 'assets/samurai2_marche_droite.png',
-        { frameWidth: 20, frameHeight: 32 }
-    )
+            { frameWidth: 20, frameHeight: 32 }
+        )
 
     };
 
@@ -122,7 +122,7 @@ export class niveau8 extends Phaser.Scene {
         // Import de tous les calques
 
         this.calque_sol = this.map1.createLayer('Sol', this.tileset);
-        this.calque_escaliers = this.map1.createLayer('Escaliers',this.tileset);
+        this.calque_escaliers = this.map1.createLayer('Escaliers', this.tileset);
         this.calque_caisse = this.map1.getObjectLayer('Caisse');
         this.calque_murs = this.map1.createLayer('Murs', this.tileset);
         this.calque_murs.setCollisionByProperty({ isSolid: true });
@@ -162,26 +162,26 @@ export class niveau8 extends Phaser.Scene {
         // SPAWN
 
         if (this.entrance == 'niveau7') {
-            this.player = this.physics.add.sprite(17*32, 6*32, 'ninja');
+            this.player = this.physics.add.sprite(17 * 32, 6 * 32, 'ninja');
             this.spawn_mob = false;
             this.longueurChaine = 146;
         }
         else {
-            this.player = this.physics.add.sprite(17*32, 6*32, 'ninja'); 
+            this.player = this.physics.add.sprite(17 * 32, 6 * 32, 'ninja');
             this.lifePlayer = 7;
             this.spawn_mob = false;
             this.longueurChaine = 146;
-            
+
         }
         this.player.setOrigin(0.5, 0.5);
         this.player.setCollideWorldBounds(true);
-        this.player.setSize(14,28).setOffset(2,3); // modification de la hitbox
+        this.player.setSize(14, 28).setOffset(2, 3); // modification de la hitbox
         this.physics.add.collider(this.player, this.calque_murs);
         this.physics.add.collider(this.player, this.calque_sol);
 
 
 
-        
+
 
         this.caisses = this.physics.add.group({ collideWorldBounds: true });
         this.calque_caisse.objects.forEach(eachCaisses => {
@@ -429,9 +429,9 @@ export class niveau8 extends Phaser.Scene {
         if (this.lifePlayer <= 0) {
             this.lifePlayer = 6;
             //this.gameOver = true;
-            this.scene.start('niveau8', { entrance: 'niveau8', lifePlayer : this.lifePlayer }) // reset
+            this.scene.start('niveau8', { entrance: 'niveau8', lifePlayer: this.lifePlayer }) // reset
         }
-        else if (this.lifePlayer > 7){
+        else if (this.lifePlayer > 7) {
             this.lifePlayer = 7;
         }
 
@@ -613,7 +613,7 @@ export class niveau8 extends Phaser.Scene {
             }
             else if ((this.cursors.up.isDown || this.keyZ.isDown || this.controller.up) && (this.cursors.right.isUp && this.keyD.isUp && !this.controller.right) && (this.cursors.left.isUp && this.keyQ.isUp && !this.controller.left)) { // HAUT
                 this.player.setVelocityX(0)
-                this.player.setVelocityY(-this.speed); 
+                this.player.setVelocityY(-this.speed);
                 this.player.anims.play('up', true);
                 this.directionPlayer = 'up';
             }
@@ -853,10 +853,10 @@ export class niveau8 extends Phaser.Scene {
 
 
 
-        if (this.player.x > (19*32) ) { // Vers le niveau 7
+        if (this.player.x > (19 * 32)) { // Vers le niveau 7
             this.cameras.main.fadeOut(400, 0, 0, 0);
             this.time.delayedCall(400, () => {
-                this.scene.start('niveau7', { entrance: 'niveau8', lifePlayer:this.lifePlayer})
+                this.scene.start('niveau7', { entrance: 'niveau8', lifePlayer: this.lifePlayer })
             })
         }
 
@@ -970,7 +970,7 @@ export class niveau8 extends Phaser.Scene {
         });
     }
 
-    
+
 
     pousseCaisse(poids, caisse) {
 
@@ -1024,7 +1024,7 @@ export class niveau8 extends Phaser.Scene {
             }
         }
     }
-   jump(poids, blocCible) {
+    jump(poids, blocCible) {
 
         this.poids.setVelocity(0);
         this.poids.disableBody(true, true);
@@ -1154,7 +1154,7 @@ export class niveau8 extends Phaser.Scene {
     spawn_mobs() {
         this.spawn_mob = true;
 
-        this.mobs.create(7*32, 6*32, 'marcheBossgauche').anims.play('bossGauche', true);
+        this.mobs.create(7 * 32, 6 * 32, 'marcheBossgauche').anims.play('bossGauche', true);
 
 
         this.mobs.children.each(function (mob) {
@@ -1167,7 +1167,7 @@ export class niveau8 extends Phaser.Scene {
             mob.dead = false;
             mob.direction = 'down';
             mob.angleVision = 0;
-            mob.setSize(12,28);
+            mob.setSize(12, 28);
 
 
 
@@ -1204,7 +1204,7 @@ export class niveau8 extends Phaser.Scene {
                 mob.modeAggro = true;
                 this.chaine.stop();
                 this.chaine.visible = false;
-                if (this.atkFauxCAC == false){
+                if (this.atkFauxCAC == false) {
                     this.faux.setVelocity(0);
                 }
                 if (mob.can_get_hit == true) {
@@ -1233,11 +1233,14 @@ export class niveau8 extends Phaser.Scene {
                         this.dropCoeur(mob.x, mob.y);
                         mob.disableBody(true, true);
                         //mob.destroy();
-                        this.cameras.main.fadeOut(1000, 0, 0, 0);
                         this.time.delayedCall(2000, () => { // à voir pour une animation de mort
-                            mob.destroy();
-                            this.scene.start('sceneFin');
+                            this.cameras.main.fadeOut(2000, 0, 0, 0);
+                            this.time.delayedCall(2000, () => { // à voir pour une animation de mort
+                                mob.destroy();
+                                this.scene.start('sceneFin');
+                            })
                         })
+
                     }
                 }
             }, null, this);
