@@ -64,8 +64,6 @@ export class niveau8 extends Phaser.Scene {
         this.priere = data.priere;
         this.lifePlayer = data.lifePlayer;
         this.longueurChaine = data.longueurChaine
-        this.nbMaillons = data.nbMaillons
-        //variables pour lignes de dialogues comme la prière
     }
 
 
