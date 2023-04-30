@@ -11,7 +11,6 @@ Input :
 Directions : 
 - ZQSD
 - Flèches
-- Pad directionnel
 
 
 Manette : 
@@ -21,5 +20,3 @@ Manette :
 - Y : lancer de poids
 
 N'hésitez pas à me faire vos retours !
-
-Projet étudiant d'un mois sur le thème Zelda Like, entièrement réalisé seul, dans le cadre d'une 1ère année Création de Jeux Vidéo.

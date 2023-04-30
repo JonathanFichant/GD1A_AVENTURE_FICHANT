@@ -208,6 +208,7 @@ export class niveau1 extends Phaser.Scene {
             this.player = this.physics.add.sprite(812, 1316, 'ninja'); //812,1316 (120y) // a corriger plus tard
             this.lifePlayer = 7;
             this.spawn_mob = false;
+            this.stunPlayer = false;
         }
 
 

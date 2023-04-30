@@ -64,6 +64,8 @@ export class niveau8 extends Phaser.Scene {
         this.priere = data.priere;
         this.lifePlayer = data.lifePlayer;
         this.longueurChaine = data.longueurChaine
+        this.nbMaillons = data.nbMaillons
+        //variables pour lignes de dialogues comme la prière
     }
 
 
@@ -163,12 +165,14 @@ export class niveau8 extends Phaser.Scene {
             this.player = this.physics.add.sprite(17 * 32, 6 * 32, 'ninja');
             this.spawn_mob = false;
             this.longueurChaine = 146;
+            this.stunPlayer = false;
         }
         else {
             this.player = this.physics.add.sprite(17 * 32, 6 * 32, 'ninja');
             this.lifePlayer = 7;
             this.spawn_mob = false;
             this.longueurChaine = 146;
+            this.stunPlayer = false;
 
         }
         this.player.setOrigin(0.5, 0.5);
